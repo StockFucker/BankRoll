@@ -3,6 +3,7 @@ import tushare as ts
 import pandas as pd
 import math
 from ggplot import *
+import datetime
 
 banks = ["600000","002142","600036","601998","601169","601166","601009","000001","601398","601988","601818","601328","601939","601288","600015","600016"]
 
@@ -27,13 +28,17 @@ def getIndex():
     df.to_csv('sh',sep=',', encoding='utf-8')
 
 
-
 def fixROE(df,season):
     #修改新浪财经的roe数据
     ratio = season
     df['roe'] = df['roe'] / ratio * 4
     return df
 
+def safe_cast(val, to_type, default=None):
+    try:
+        return to_type(val)
+    except ValueError:
+        return default
 
 def concatData():
     last_df = pd.read_csv('sh',sep=',', encoding='utf-8',dtype={'code': str})
@@ -48,20 +53,23 @@ def concatData():
     last_df = last_df.iloc[::-1]
     last_df.to_csv('prices.csv',sep=',', encoding='utf-8')
 
-def calculateData():
 
+def calculate_report():
     report_dfs = []
     report_dates = []
     for year in range(2012,2016):
         for season in range(1,5):
             if (year == 2015 and season == 4) or (year == 2012 and (season == 1 or season == 2)):
                 continue
-            filename = str(year) + '-' + str(season)
+            filename = "reportData/" + str(year) + '-' + str(season)
             df = pd.read_csv(filename,sep=',', encoding='utf-8',dtype={'code': str})
             #过滤银行股
             df = df[df['code'].isin(banks)]
             #修正roe
             df = fixROE(df,season)
+
+            df.set_index(['code'], inplace = True)
+
             #报告日期生成
             fix_year = year
             if season == 4:
@@ -70,11 +78,65 @@ def calculateData():
             df['report_date'] = pd.to_datetime(df['report_date'])
             if season == 4:
                 df['report_date'] = df['report_date'] - pd.Timedelta(days = 30)
-
             max_date = df['report_date'].max()
             report_dates.append(max_date)
             report_dfs.append(df)
+    return (report_dfs,report_dates)
 
+def calculate_diverse():
+    diverse_dfs = []
+    for bank in banks:
+        file_name = "diverseData/" + bank + "_0.csv"
+        diverse_df = pd.read_csv(file_name,sep=',', encoding='utf-8')
+        diverse_df['code'] = bank
+        diverse_dfs.append(diverse_df)
+    df = pd.concat(diverse_dfs)
+    df = df.drop(df.columns[[1,5,6,7]],1)
+    names = list(df.columns.values)
+    df = df.rename(columns = {names[0]:'date',names[1]:'bonus',names[2]:'accum',names[3]:'inst'})
+    df['date'] = pd.to_datetime(df['date'])
+    df = df.sort(['date'])
+    return df
+
+def generate_df_from(from_date,to_date,report_df,diverse_df):
+    diverse_df = diverse_df[(diverse_df['date'] >= from_date) & (diverse_df['date'] < to_date)]
+    new_dfs = [report_df.copy()]
+    new_dates = [from_date]
+    df = report_df    
+    for index, row in diverse_df.iterrows():
+        code = row['code']
+        inst_tax = safe_cast(row['inst'], float, 0.0)/100.0
+        bonus_tax = safe_cast(row['bonus'], float, 0.0)/100.0
+        df['bvps'][code] = df['bvps'][code] - inst_tax - bonus_tax
+        new_dfs.append(df.copy())
+        new_dates.append(row['date'])
+    return new_dfs,new_dates
+
+def mix_report_diverse(reports,diverse_df):
+    report_dfs,report_dates = reports
+    mixed_dfs = []
+    mixed_dates = []
+    date = report_dates[0]
+    for i in range(0,len(report_dates)):
+        next_date =  (datetime.date.today() if (i == len(report_dates) - 1) else report_dates[i + 1])
+        report_df = report_dfs[i]
+        new_dfs,new_dates = generate_df_from(date,next_date,report_df,diverse_df)
+        mixed_dfs = mixed_dfs + new_dfs
+        mixed_dates = mixed_dates + new_dates
+        date = next_date   
+    return mixed_dfs,mixed_dates 
+
+
+def calculateData():
+    
+    #准备财报数据
+    reports = calculate_report()
+
+    #准备分红数据
+    diverse_df = calculate_diverse()
+    report_dfs,report_dates = mix_report_diverse(reports,diverse_df)
+
+    #遍历每一天计算翻倍率
     df = pd.read_csv('prices.csv',sep=',', encoding='utf-8')
     df['date'] = pd.to_datetime(df['date'])
 
@@ -92,15 +154,15 @@ def calculateData():
                 current_date_index = current_date_index + 1
             report_df = report_dfs[current_date_index]
         ranks = []
-        for _, report_row in report_df.iterrows():
-            code = str(report_row['code'])
+        for code_index, report_row in report_df.iterrows():
+            code = code_index
             price = row[code]
-            #rank = math.log(price * 2 / report_row['bvps'],1 + report_row['roe']/100)
+            rank = math.log(price * 2 / report_row['bvps'],1 + report_row['roe']/100)
             rank = 1/(1 + report_row['roe'])
             ranks.append(rank)
         report_df['rank'] = ranks
         report_df = report_df.sort(['rank'])
-        codes.append(list(report_df['code'])[0])
+        codes.append(list(report_df.index)[0])
     df['code'] = codes
     df.to_csv('hold.csv',sep=',', encoding='utf-8')    
 
@@ -109,7 +171,6 @@ def getPriceFrom(df,code,date):
     df = df[df['date'] == date]
     price = list(df[code])[0]
     return price
-
 
 def trade():
     
