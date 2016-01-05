@@ -1,0 +1,31 @@
+.kchart{position:relative}
+.danmaku_view{position:absolute;top:96px;left:0;width:100%;height:256px;overflow:hidden;text-align:left;z-index:100}
+.danmaku_item{display:block;*zoom:1;position:absolute;left:100%;margin:4px 0;padding:0 3px;white-space:nowrap;font-family:"simsong",serif;font-size:14px;letter-spacing:1px;background-color:#ffeeda;background-color:rgba(255,171,71,0.2);*background-color:#ffeeda;color:#3d3d3d;border-radius:2px}
+.danmaku_item.my{background-color:#daeeff;background-color:rgba(71,171,255,0.2);*background-color:#daeeff}
+.danmaku_item.row_1{top:0}
+.danmaku_item.row_2{top:24px}
+.danmaku_item.row_3{top:48px}
+.danmaku_item.row_4{top:72px}
+.danmaku_item.row_5{top:120px}
+.danmaku_item.row_6{top:144px}
+.danmaku_item.row_7{top:168px}
+.danmaku_item.row_8{top:192px}
+#altcontenttsBox{height:410px}
+.danmaku_ctrl{position:relative;height:25px;padding-left:40px;margin-top:-3px;margin-bottom:3px;line-height:25px;color:#8c8c8c}
+.danmaku_ctrl:after{content:" ";display:block;height:0;clear:both}
+.danmaku_ctrl *{box-sizing:content-box}
+.danmaku_ctrl div,.danmaku_ctrl a,.danmaku_ctrl input{display:block;position:absolute}
+.danmaku_ctrl input{height:19px;width:245px;left:110px;padding:2px;border:1px solid #ccc;transition:.5s}
+.danmaku_ctrl input.flash{border:1px solid #db1011;box-shadow:0 0 5px #db1011;transition:.25s;outline-color:#db1011}
+.danmaku_ctrl .chat_btn{height:23px;width:34px;left:360px;line-height:25px;color:#fff;background-color:#66a0dc;border:1px solid #1a75d4;cursor:pointer;text-decoration:none;text-align:center}
+.danmaku_power{position:relative;left:66px;height:19px;margin:3px;width:34px;background-color:#ccc;border-radius:20px;cursor:pointer;transition:.5s}
+.danmaku_power.on{background-color:#66a0dc}
+.danmaku_power.on .danmaku_power_btn{left:16px}
+.danmaku_power_btn{position:absolute;top:1px;left:1px;height:17px;width:17px;background-color:#fff;border-radius:20px;transition:.5s}
+.kchart_big .danmaku_ctrl{padding-left:21%}
+.kchart_big .money_chart{height:575px}
+.chart_hidden{position:absolute;width:512px;height:0;overflow:hidden;visibility:hidden;left:-10000px}
+.dm_tip{position:absolute;top:-100px;left:50%;margin-left:-75px;z-index:9999;width:150px;height:32px;background-color:#ff8090;background-color:rgba(255,0,32,0.5);border-radius:5px;box-shadow:0 0 5px rgba(0,0,0,0.5);text-align:center;line-height:32px;color:#fff;transform:translateY(10px);transition:.5s;opacity:0;visibility:hidden}
+.dm_tip.show{transform:translateY(0px);opacity:1;visibility:visible}
+.guess_btn{position:absolute;left:410px;color:#f25728;border:1px solid #fdd6d1;padding:0 .5em;border-radius:3px;text-decoration:none;cursor:pointer;transition:.5s}
+.guess_btn:hover{background-color:#fef0ef;text-decoration:none}
