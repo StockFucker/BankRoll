@@ -139,6 +139,9 @@ def calculate_report():
             if season == 4:
                 df['report_date'] = df['report_date'] - pd.Timedelta(days = 30)
             max_date = df['report_date'].max()
+            df['inst'] = 0.0
+            df['bonus'] = 0.0
+            df['bvps_fix'] = df['bvps']
             report_dates.append(max_date)
             report_dfs.append(df)
     return (report_dfs,report_dates)
@@ -166,9 +169,8 @@ def generate_df_from(from_date,to_date,report_df,diverse_df):
     
     for index, row in diverse_df.iterrows():
         code = row['code']
-        inst_tax = safe_cast(row['inst'], float, 0.0)/97.0 
-        bonus_tax = safe_cast(row['bonus'], float, 0.0)/100.0 
-        df['bvps'][code] = df['bvps'][code] - inst_tax - bonus_tax
+        df['inst'][code] = safe_cast(row['inst'],float,0.0)/10
+        df['bonus'][code] = safe_cast(row['bonus'],float,0.0)/10
         new_dfs.append(df.copy())
         new_dates.append(row['date'])
     return new_dfs,new_dates
@@ -187,7 +189,6 @@ def mix_report_diverse(reports,diverse_df):
         date = next_date  
     return mixed_dfs,mixed_dates 
 
-
 def calculateData():
     
     #准备财报数据
@@ -196,10 +197,6 @@ def calculateData():
     #准备分红数据
     diverse_df = calculate_diverse()
     report_dfs,report_dates = mix_report_diverse(reports,diverse_df)
-
-    report_dfs_,report_dates_ = calculate_report()
-    current_date_index_ = 0
-    report_dates_.append(pd.Timestamp('2016-01-01'))
 
     #遍历每一天计算翻倍率
     df = pd.read_csv('prices.csv',sep=',', encoding='utf-8')
@@ -219,32 +216,17 @@ def calculateData():
 
         ranks = []
         for code_index, report_row in report_df.iterrows():
-            code = code_index
-            price = row[code]
-            rank = math.log(price * 2 / report_row['bvps'],1 + report_row['roe']/100)
+            price = row[code_index]
+            inst = report_row['inst']
+            bonus = report_row['bonus']
+            bvps = report_row['bvps']
+            tax = (inst + bonus) * 0.1
+            cost = tax + (inst - tax) * (1 - bvps/price + 0.0003)
+            print (1 - bvps/price + 0.0003)
+            report_row['bvps_fix'] = bvps - cost
+            rank = math.log(price * 2 / report_row['bvps_fix'],1 + report_row['roe']/100)
             ranks.append(rank)
         report_df['rank'] = ranks
-
-        current_report_date_ = report_dates_[current_date_index_ + 1]
-        report_df_ = report_dfs_[current_date_index_]
-        if row['date'] >= current_report_date_:
-            current_date_index_ = current_date_index_ + 1
-        ranks_ = []
-        for code_index, report_row in report_df_.iterrows():
-            code = code_index
-            price = row[code]
-            rank = math.log(price * 2 / report_row['bvps'],1 + report_row['roe']/100)
-            ranks_.append(rank)
-        report_df_['rank'] = ranks_ 
-        differs  = report_df['bvps'] - report_df_['bvps']
- 
-        for differ in differs: 
-            if not differ == 0:
-                print "[Date]:" + str(row['date']) + "   report_date:" + str(report_dates_[current_date_index_]) + "   diverse_date:" + str(report_dates[current_date_index])
-                print "[Index] report:" +  str(current_date_index_) + "   diverse:" + str(current_date_index)
-                print report_df['bvps']
-                print report_df_['bvps']
-                print differs
 
         report_df = report_df.sort(['rank'])
         codes.append(list(report_df.index)[0])
