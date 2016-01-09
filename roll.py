@@ -9,7 +9,7 @@ banks = ["600000","002142","600036","601998","601169","601166","601009","000001"
 
 def getData():
     #获取财务数据保存到本地，修改tushare源码使其仅包括金融类股票
-    for year in range(2012,2013):
+    for year in range(2010,2011):
         for season in range(3,5):
             df = ts.get_report_data(year,season)
             filename = str(year) + '-' + str(season)
@@ -111,9 +111,9 @@ def trade():
 def calculate_report():
     report_dfs = []
     report_dates = []
-    for year in range(2012,2016):
+    for year in range(2010,2016):
         for season in range(1,5):
-            if (year == 2015 and season == 4) or (year == 2012 and (season == 1 or season == 2)):
+            if (year == 2015 and season == 4) or (year == 2010 and (season == 1 or season == 2)):
                 continue
             filename = "reportData/" + str(year) + '-' + str(season)
             df = pd.read_csv(filename,sep=',', encoding='utf-8',dtype={'code': str})
@@ -216,24 +216,28 @@ def calculateData():
             bonus = report_row['bonus']
             bvps = report_row['bvps']
             tax = (inst + bonus) * 0.1
-            cost = tax + (inst - tax) * (1 - bvps/price + 0.0003)
+            cost = inst - (inst - tax) * (bvps/price) * 0.9997
             report_row['bvps_fix'] = bvps - cost
             rank = math.log(price * 2 / report_row['bvps'],1 + report_row['roe']/100)
             ranks.append(rank)
+
         report_df['rank'] = ranks
 
         report_df = report_df.sort(['rank'])
         codes.append(list(report_df.index)[0])
+        
+        if row['date'] == pd.Timestamp('2011-11-16'):
+            print report_df
+
     hold_df = pd.DataFrame(index=df.index)
     hold_df['date'] = df['date']
     hold_df['code'] = codes
     hold_df.to_csv('hold.csv',sep=',', encoding='utf-8')    
 
-trade()
+calculateData()
 
 # def calculateTradeModel():
 #     from_date = "2011-04-30"
-
 # def trade(from_date,hold_codes):
 #     print from_date
 #     print hold_codes
