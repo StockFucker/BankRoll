@@ -18,13 +18,13 @@ def getData():
 def getPrice():
     #获取价格数据保存到本地
     for bank in banks:
-        df = ts.get_hist_data(bank)
+        df = ts.get_h_data(bank, start='2011-01-01', end='2015-12-31',autype=None)
         if df is not None:
             df.to_csv(bank,sep=',', encoding='utf-8')
 
 def getIndex():
     #获取上证指数保存到本地
-    df = ts.get_hist_data('sh')
+    df = ts.get_h_data('000001',start= '2011-01-01',end = '2015-12-31', index=True)
     df.to_csv('sh',sep=',', encoding='utf-8')
 
 def fixROE(df,season):
@@ -40,17 +40,18 @@ def safe_cast(val, to_type, default=None):
         return default
 
 def concatData():
-    last_df = pd.read_csv('sh',sep=',', encoding='utf-8',dtype={'code': str})
-    last_df = last_df.drop(last_df.columns[[1,2,4,5,6,7,8,9,10,11,12,13]],1)
+    last_df = pd.read_csv('priceData/sh',sep=',', encoding='utf-8',dtype={'code': str})
+    last_df = last_df.drop(last_df.columns[[1,2,4,5,6]],1)
 
     for bank in banks:
-        df = pd.read_csv(bank,sep=',', encoding='utf-8')
-        df = df.drop(df.columns[[1,2,4,5,6,7,8,9,10,11,12,13,14]],1)
+        df = pd.read_csv("priceData/" + bank,sep=',', encoding='utf-8')
+        df = df.drop(df.columns[[1,2,4,5,6]],1)
         df = df.rename(columns = {'close':bank})
         last_df = last_df.merge(df,left_on = 'date',right_on = 'date',how = 'left')
 
     last_df = last_df.iloc[::-1]
     last_df.to_csv('prices.csv',sep=',', encoding='utf-8')
+
 
 def getPriceFrom(df,code,date):
     df = df[df['date'] == date]
@@ -60,6 +61,8 @@ def getPriceFrom(df,code,date):
 def trade():
     
     df = pd.read_csv('hold.csv',sep=',', encoding='utf-8',dtype={'code': str})
+    price_df = pd.read_csv('fq_prices.csv',sep=',', encoding='utf-8')
+    df = df.merge(price_df,left_on = 'date',right_on = 'date',how = 'left')
     df['date'] = pd.to_datetime(df['date'])
 
     current_hold_code = list(df['code'])[0]
@@ -70,46 +73,37 @@ def trade():
     index_values = []
     start_index = list(df['close'])[0]
 
-    bank1_values = []
-    bank1_start = list(df['600015'])[0]
-
-    bank2_values = []
-    bank2_start = list(df['601818'])[0]
-
-    bank3_values = []
-    bank3_start = list(df['601166'])[0]
-
-    bank4_values = []
-    bank4_start = list(df['601288'])[0]
-
     for index, row in df.iterrows():
 
         hold_price = getPriceFrom(df,current_hold_code,row['date'])
 
+        hold_value = 0
         #算出净值
-        values.append(hold_price * hold_amount)
         index_values.append(row['close'] / start_index)
-        bank1_values.append(row['600015'] / bank1_start)
-        bank2_values.append(row['601818'] / bank2_start)
-        bank3_values.append(row['601166'] / bank3_start)
-        bank4_values.append(row['601288'] / bank4_start)
+
+        if math.isnan(hold_price):
+            hold_value = values[-1]
+        else:
+            hold_value = hold_price * hold_amount
+
+        values.append(hold_value)
+
         #调仓
         code = row['code']
         if code == current_hold_code:
             continue
 
-        price = getPriceFrom(df,code,row['date'])
-        hold_amount = hold_price * hold_amount * 0.998 / price
         current_hold_code = code
+        price = getPriceFrom(df,code,row['date'])
+        if math.isnan(price):
+            continue
+        hold_amount = hold_value * 0.998 / price
+
     df['my_value'] = values
     df['index_value'] = index_values
-    df['600015'] = bank1_values
-    df['601818'] = bank2_values
-    df['601166'] = bank3_values
-    df['601288'] = bank4_values
 
     print df 
-    df = pd.melt(df,id_vars = ["date"],value_vars = ['my_value','index_value','600015','601818','601166','601288']) 
+    df = pd.melt(df,id_vars = ["date"],value_vars = ['my_value','index_value']) 
     plot = ggplot(df,aes(x = "date", y = "value",color = "variable")) + geom_line(),
     print plot
 
@@ -205,6 +199,7 @@ def calculateData():
     codes = []
     current_date_index = 0
     report_dates.append(pd.Timestamp('2016-01-01'))
+
     for index, row in df.iterrows():
 
         #根据交易日获取最近的报告，分析出排名，选择持仓股
@@ -222,19 +217,19 @@ def calculateData():
             bvps = report_row['bvps']
             tax = (inst + bonus) * 0.1
             cost = tax + (inst - tax) * (1 - bvps/price + 0.0003)
-            print (1 - bvps/price + 0.0003)
             report_row['bvps_fix'] = bvps - cost
-            rank = math.log(price * 2 / report_row['bvps_fix'],1 + report_row['roe']/100)
+            rank = math.log(price * 2 / report_row['bvps'],1 + report_row['roe']/100)
             ranks.append(rank)
         report_df['rank'] = ranks
 
         report_df = report_df.sort(['rank'])
         codes.append(list(report_df.index)[0])
-    df['code'] = codes
-    df.to_csv('hold.csv',sep=',', encoding='utf-8')    
+    hold_df = pd.DataFrame(index=df.index)
+    hold_df['date'] = df['date']
+    hold_df['code'] = codes
+    hold_df.to_csv('hold.csv',sep=',', encoding='utf-8')    
 
-calculateData()
-
+trade()
 
 # def calculateTradeModel():
 #     from_date = "2011-04-30"
