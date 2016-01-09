@@ -82,6 +82,8 @@ def trade():
 
         #当天持有股票
         code = row['code']
+        hold_price = getPriceFrom(df, current_hold_code, row['date'])
+        hold_value = values[-1] if math.isnan(hold_price) else hold_price * hold_amount
 
         if code != current_hold_code:
             #调仓
@@ -97,8 +99,6 @@ def trade():
             values.append(hold_value)
         else:
             #不调仓
-            hold_price = getPriceFrom(df, current_hold_code, row['date'])
-            hold_value = values[-1] if math.isnan(hold_price) else hold_price * hold_amount
             values.append(hold_value)
 
     df['my_value'] = values
