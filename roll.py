@@ -59,6 +59,7 @@ def getPriceFrom(df,code,date):
     return price
 
 def trade():
+    
     df = pd.read_csv('hold.csv',sep=',', encoding='utf-8',dtype={'code': str})
     price_df = pd.read_csv('fq_prices.csv',sep=',', encoding='utf-8')
     df = df.merge(price_df,left_on = 'date',right_on = 'date',how = 'left')
@@ -66,48 +67,45 @@ def trade():
 
     current_hold_code = list(df['code'])[0]
     start_date = list(df['date'])[0]
-
-    hold_value = 1.0
-    hold_price = getPriceFrom(df,current_hold_code,start_date)
-    hold_amount = hold_value/hold_price
-
+    hold_amount = 1.0/getPriceFrom(df,current_hold_code,start_date)
     values = []
-    index_values = []
 
+    index_values = []
     start_index = list(df['close'])[0]
 
     for index, row in df.iterrows():
-        #上证收盘指数归一化
-        index_values.append(row['close']/start_index)
 
-        #当天持有股票
-        code = row['code']
-        hold_price = getPriceFrom(df, current_hold_code, row['date'])
-        hold_value = values[-1] if math.isnan(hold_price) else hold_price * hold_amount
+        hold_price = getPriceFrom(df,current_hold_code,row['date'])
 
-        if code != current_hold_code:
-            #调仓
-            current_hold_code = code
-            hold_price = getPriceFrom(df, code, row['date'])
-            if math.isnan(hold_price):
-                values.append(hold_value)
-                continue
-            #调仓后市值
-            hold_value = hold_value*0.998
-            #调仓后持仓数量
-            hold_amount = hold_value/hold_price
-            values.append(hold_value)
+        hold_value = 0
+        #算出净值
+        index_values.append(row['close'] / start_index)
+
+        if math.isnan(hold_price):
+            hold_value = values[-1]
         else:
-            #不调仓
-            values.append(hold_value)
+            hold_value = hold_price * hold_amount
+
+        values.append(hold_value)
+
+        #调仓
+        code = row['code']
+        if code == current_hold_code:
+            continue
+
+        current_hold_code = code
+        price = getPriceFrom(df,code,row['date'])
+        if math.isnan(price):
+            continue
+        hold_amount = hold_value * 0.998 / price
 
     df['my_value'] = values
     df['index_value'] = index_values
 
     print df 
     df = pd.melt(df,id_vars = ["date"],value_vars = ['my_value','index_value']) 
-    #plot = ggplot(df,aes(x = "date", y = "value",color = "variable")) + geom_line(),
-    #print plot
+    plot = ggplot(df,aes(x = "date", y = "value",color = "variable")) + geom_line(),
+    print plot
 
 
 def calculate_report():
