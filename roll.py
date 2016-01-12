@@ -52,7 +52,6 @@ def concatData():
     last_df = last_df.iloc[::-1]
     last_df.to_csv('prices.csv',sep=',', encoding='utf-8')
 
-
 def getPriceFrom(df,code,date):
     df = df[df['date'] == date]
     price = list(df[code])[0]
@@ -104,7 +103,7 @@ def trade():
 
     print df 
     df = pd.melt(df,id_vars = ["date"],value_vars = ['my_value','index_value']) 
-    plot = ggplot(df,aes(x = "date", y = "value",color = "variable")) + geom_line(),
+    plot = ggplot(df,aes(x = "date", y = "value",color = "variable")) + geom_line()
     print plot
 
 
@@ -234,13 +233,12 @@ def calculateData():
     hold_df['code'] = codes
     hold_df.to_csv('hold.csv',sep=',', encoding='utf-8')    
 
-calculateData()
+def calculate_bank_data():
+    for bank in banks:
+        file_name = "bankData/" + bank + ".xls"
+        xl = pd.ExcelFile('000001.xls')
+        print xl.sheet_names
 
-# def calculateTradeModel():
-#     from_date = "2011-04-30"
-# def trade(from_date,hold_codes):
-#     print from_date
-#     print hold_codes
+calculate_bank_data()
 
-# from_date,hold_codes = calculateTradeModel()
-# trade(from_date,hold_codes)
+    
