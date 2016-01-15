@@ -7,14 +7,6 @@ import time
 
 banks = ["600000","002142","600036","601998","601169","601166","601009","000001","601398","601988","601818","601328","601939","601288","600015","600016"]
 
-def getData():
-    #获取财务数据保存到本地，修改tushare源码使其仅包括金融类股票
-    for year in range(2010,2011):
-        for season in range(3,5):
-            df = ts.get_report_data(year,season)
-            filename = str(year) + '-' + str(season)
-            df.to_csv(filename,sep=',', encoding='utf-8')
-
 def getPrice():
     #获取价格数据保存到本地
     for bank in banks:
@@ -26,12 +18,6 @@ def getIndex():
     #获取上证指数保存到本地
     df = ts.get_h_data('000001',start= '2011-01-01',end = '2015-12-31', index=True)
     df.to_csv('sh',sep=',', encoding='utf-8')
-
-def fixROE(df,season):
-    #修改新浪财经的roe数据
-    ratio = season
-    df['roe'] = df['roe'] / ratio * 4
-    return df
 
 def safe_cast(val, to_type, default=None):
     try:
@@ -107,37 +93,6 @@ def trade():
     print plot
 
 
-def calculate_report():
-    report_dfs = []
-    report_dates = []
-    for year in range(2010,2016):
-        for season in range(1,5):
-            if (year == 2015 and season == 4) or (year == 2010 and (season == 1 or season == 2)):
-                continue
-            filename = "reportData/" + str(year) + '-' + str(season)
-            df = pd.read_csv(filename,sep=',', encoding='utf-8',dtype={'code': str})
-            #过滤银行股
-            df = df[df['code'].isin(banks)]
-            #修正roe
-            df = fixROE(df,season)
-
-            df.set_index(['code'], inplace = True)
-
-            #报告日期生成
-            fix_year = year
-            if season == 4:
-                fix_year = year + 1
-            df['report_date'] = str(fix_year) + '-' + df['report_date']
-            df['report_date'] = pd.to_datetime(df['report_date'])
-            if season == 4:
-                df['report_date'] = df['report_date'] - pd.Timedelta(days = 30)
-            max_date = df['report_date'].max()
-            df['inst'] = 0.0
-            df['bonus'] = 0.0
-            df['bvps_fix'] = df['bvps']
-            report_dates.append(max_date)
-            report_dfs.append(df)
-    return (report_dfs,report_dates)
 
 def calculate_diverse():
     diverse_dfs = []
@@ -232,13 +187,5 @@ def calculateData():
     hold_df['date'] = df['date']
     hold_df['code'] = codes
     hold_df.to_csv('hold.csv',sep=',', encoding='utf-8')    
-
-def calculate_bank_data():
-    for bank in banks:
-        file_name = "bankData/" + bank + ".xls"
-        xl = pd.ExcelFile('000001.xls')
-        print xl.sheet_names
-
-calculate_bank_data()
 
     
