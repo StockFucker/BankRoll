@@ -1,0 +1,1 @@
+dataArr = "http://ggzx.stock.hexun.com/more.jsp?t=2&s=0&k=8350";HYListPage.GetData(dataArr);

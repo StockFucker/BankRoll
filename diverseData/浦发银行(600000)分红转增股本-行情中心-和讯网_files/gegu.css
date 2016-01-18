@@ -1,0 +1,1827 @@
+
+/* CSS Document */
+
+
+
+/* global
+
+-------------------------------------- */
+
+*{ padding:0; margin:0; }
+
+ul{ list-style: none; }
+
+a{ color: #000; text-decoration: none; }
+
+a:hover{ color: #cc0000; text-decoration: underline; }
+
+a img{ border: none; }
+
+h1,h2,h3,h4,h5,h6{ font-size: 12px; font-weight: normal; }
+
+body{ font-size: 12px;}
+
+.clear{ clear: both; }
+
+
+
+#wrap{width:960px; margin:0 auto; overflow:hidden;  }
+
+#navigation{width:950px; padding-left:8px; border:1px solid #ccc; float:left; border-bottom:none; height:40px; line-height:40px}
+
+#sub_nav{background:url(http://stockdata.stock.hexun.com/2008/img/gegu01.gif) repeat-x; height:29px; line-height:29px; width:950px; padding-left:8px; border:1px solid #E9D6B8; float:left}
+
+#gegu_content{width:958px; border:1px solid #ccc; border-top:none; float:left; background:url(http://stockdata.stock.hexun.com/2008/img/gegu02.gif) repeat-y 138px top; padding-bottom:40px}
+
+#gegu_content #leftpart{width:138px; float:left}
+
+#gegu_content #rightpart{width:819px; float:right;}
+
+/* 菜单 */
+
+#menu dt{height:22px; line-height:22px; cursor:pointer; font-weight:bold; padding-left:23px; margin-bottom:1px}
+
+#menu dd{height:22px; line-height:22px; background:#F5E9D9; margin-bottom:1px}
+
+#menu dd a{display:block; width:115px; padding-left:21px; color:#4E4D49}
+
+#menu dd a:hover{background:#FACC8E; color:#cc0000}
+
+#menu h2 {font-weight:bold;}
+
+.dt_open{background:#E9D5BA url(http://stockdata.stock.hexun.com/2008/img/gegu_open.gif) no-repeat 12px 8px;}
+
+.dt_closed{background:#E9D5BA url(http://stockdata.stock.hexun.com/2008/img/gegu_closed.gif) no-repeat 12px 8px;}
+
+
+
+#stocktitle{height:43px; padding-top:12px; padding-left:15px; background:url(http://stockdata.stock.hexun.com/2008/img/gegu02.gif) repeat-x left 28px; border-bottom:1px solid #ccc; overflow:hidden}
+
+#stocktitle #title{background:url(http://stockdata.stock.hexun.com/2008/img/gegu03_l.gif) no-repeat left top; float:left}
+
+#stocktitle #title h3{background:url(http://stockdata.stock.hexun.com/2008/img/gegu03_r.gif) no-repeat right top; height:33px; line-height:33px; float:left; padding-left:33px; padding-right:15px}
+
+#stocktitle #exp{float:right; padding-top:24px; padding-right:12px}
+
+#zaiyao{height:35px; padding-top:13px; padding-left:15px}
+
+#zaiyao li{float:left}
+
+#zaiyao li a{display:block;background:url(http://stockdata.stock.hexun.com/2008/img/gegu04.gif) no-repeat; width:125px; height:24px; margin-right:15px; line-height:24px; text-align:center}
+
+#zaiyao li a:hover{text-decoration:none; color:#cc0000}
+
+#zaiyao li.selected a{display:block;background:url(http://stockdata.stock.hexun.com/2008/img/gegu04_slt.gif) no-repeat; width:125px; height:24px; margin-right:15px; line-height:24px; text-align:center}
+
+#zaiyao li.explain{float:right}#zaiyao li.explain a{background:none}
+
+#zaiyaocontent{ width:770px; padding:10px 10px 20px 10px; margin-left:15px; border:1px solid #ccc; border-right:1px solid #666; border-bottom:1px solid #666; float:left; display:inline; clear:both }
+
+#zaiyaocontent caption{text-align:left; height:37px; line-height:37px; padding-left:12px; background:#EDEDED}
+
+#zaiyaocontent #web1 td{padding:10px 17px; line-height:22px}
+
+#zaiyaocontent .web2 td{line-height:24px}
+
+#zaiyaocontent #web1 .bgcolor{background:#EDEDED}
+
+#zaiyaocontent .web2 .bgcolor{background:#EDEDED url(http://stockdata.stock.hexun.com/2008/img/gegu06.gif) repeat-y right; }
+
+#zaiyaocontent .web2 .bgcolor2{background:#E4E4E4 url(http://stockdata.stock.hexun.com/2008/img/gegu06.gif) repeat-y right; text-align:center; font-weight:bold;}
+
+#zaiyaocontent .web2 .lastbgcolor{background:#EDEDED ;}
+
+#zaiyaocontent .web2 .lastbgcolor2{background:#E4E4E4 ; text-align:center; font-weight:bold;}
+
+#zaiyaocontent .web2 .dotborder{background:url(http://stockdata.stock.hexun.com/2008/img/gegu06.gif) repeat-y right;}
+
+#zaiyaocontent .web2 .dotborder2{background:url(http://stockdata.stock.hexun.com/2008/img/gegu06.gif) repeat-y right; font-size:14px;}
+
+#zaiyaocontent .web2 .tishi{padding:0 12px}
+
+#zaiyaocontent .web2 .tishi2{padding:20px 40px 20px 40px;}
+
+#zaiyaocontent .fred{color:#cc0000}
+
+#zaiyaocontent .fblue{color:#0134AA}
+
+#zaiyaocontent .web2 .add1{
+
+	background-color: #F1F1F1;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/dot1.gif);
+
+	background-repeat: no-repeat;
+
+	background-position: 13px 6px;
+
+	text-align:left;
+
+	font-weight:normal;
+
+	padding:6px 0 7px 32px;
+
+}
+
+#zaiyaocontent .web2 .add1_1{
+
+	background-color: #F1F1F1;
+
+	background-repeat: no-repeat;
+
+	background-position: 13px 6px;
+
+	text-align:left;
+
+	font-weight:normal;
+
+	padding:6px 0 7px 32px;
+
+}
+
+#zaiyaocontent .web2 .add2{
+
+	background-color: #fff;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/dot1.gif);
+
+	background-repeat: no-repeat;
+
+	background-position: 13px 6px;
+
+	text-align:left;
+
+	font-weight:normal;
+
+	padding-left:32px;
+
+}
+
+
+
+#zaiyaocontent .web2 .add2_1{
+
+	background-color: #fff;
+
+	text-align:left;
+
+	font-weight:normal;
+
+	padding-left:32px;
+	
+	width:70px;
+
+}
+
+
+
+#zaiyaocontent .add3{
+
+	border-bottom:3px solid #B1B1B1;
+
+	line-height:24px;
+
+	font-weight:bold;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/dot1.gif);
+
+	background-repeat: no-repeat;
+
+	padding-left:19px;
+
+	background-position: 3px 5px;
+
+	margin-bottom:6px;
+
+	margin-top:6px;
+
+	clear:both;
+
+}
+
+#zaiyaocontent .add3 span{ float:right; font-weight:normal; height:24px;}
+
+
+
+
+
+#zaiyaocontent .add3_1{
+
+	border-bottom:3px solid #B1B1B1;
+
+	line-height:24px;
+
+	font-weight:bold;
+
+	background-repeat: no-repeat;
+
+	padding-left:19px;
+
+	background-position: 3px 5px;
+
+	margin-bottom:6px;
+
+	margin-top:6px;
+
+	clear:both;
+
+}
+
+#zaiyaocontent .add3_1 span{ float:right; font-weight:normal;}
+
+
+
+
+
+#zaiyaocontent .add4{ width:380px; float:left;}
+
+#zaiyaocontent .add5{ background:#F1F1F1; padding:20px; line-height:22px;}
+
+#zaiyaocontent .add6{ width:332px; border:1px solid #D0D0D0; line-height:20px; margin-left:13px; padding:5px 5px 0 10px;}
+
+.add7{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img27.gif);
+
+	background-repeat: repeat-x;
+
+	height: 22px;
+
+	width:792px;
+
+	margin-left:15px;
+
+}
+
+.add9{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img30.gif);
+
+	background-repeat: repeat-x;
+
+	height:21px;
+
+	width:792px;
+
+	margin-left:15px;
+
+}
+
+#zaiyaocontent .add8{ font-weight:bold;padding-left:10px; line-height:25px;}
+
+#zaiyaocontent .add8 span{ float:right;font-weight:normal}
+
+#zaiyaocontent .add10{ height:22px; background:#F4F4F4; font-weight:bold; padding:14px 0 0 23px;}
+
+#zaiyaocontent .add11{ line-height:24px; padding:20px;}
+
+#zaiyaocontent .add12{ line-height:22px; padding:15px; background:#F4F4F4}
+
+#zaiyaocontent .add13{ line-height:22px; padding:15px; }
+
+#zaiyaocontent .add14{
+
+height:19px;
+
+	background-color: #F1F1F1;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img41.gif);
+
+	background-repeat: no-repeat;
+
+	background-position: 5px 4px;
+
+	padding:5px 0 0 26px;
+
+}
+
+#zaiyaocontent .add15{ height:19px;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img41.gif);
+
+	background-repeat: no-repeat;
+
+	background-position: 5px 4px;
+
+	padding:5px 0 0 26px;}
+
+
+
+#zaiyaocontent .add14a{
+
+height:19px;
+
+	background-color: #F1F1F1;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img59.gif);
+
+	background-repeat: no-repeat;
+
+	background-position: 5px 4px;
+
+	padding:5px 0 0 26px;
+
+}
+
+#zaiyaocontent .add15a{ height:19px;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img59.gif);
+
+	background-repeat: no-repeat;
+
+	background-position: 5px 4px;
+
+	padding:5px 0 0 26px;}
+
+.add16 span{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img45.gif);
+
+	background-repeat: no-repeat;
+
+	height: 18px;
+
+	width: 70px;
+
+	padding-left:15px;
+
+	display:block;
+
+	margin-left:16px;
+
+	float:left;
+
+	padding-top:6px;
+
+	margin-bottom:7px;
+
+}
+
+.add16 .add17{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img44.gif);
+
+	background-repeat: no-repeat;
+
+	height: 18px;
+
+	width: 70px;
+
+	padding-left:15px;
+
+	margin-left:16px;
+
+	float:left;
+
+	padding-top:6px;
+
+	font-weight:bold;
+
+	margin-bottom:7px;
+
+}
+
+.hexunShow{display:block}
+
+.hexunHidden{display:none}
+
+/*-------------------------------*/
+
+
+
+
+
+
+
+
+
+/* layout
+
+------------------------------------------*/
+
+#content_old{ border: 1px solid #999; border-top: none; margin: 0 auto;  width:958px; background:#FFF7ED;}
+
+#content{ border: 1px solid #999; border-top: none; margin: 0 auto 0;  width:958px; background:#FFF7ED; float:left;}
+
+#mainbox{
+
+	float: left;
+
+	width: 810px;
+
+	background: url(../img/gg_bg.gif) no-repeat right 0;
+
+	padding-right:10px;
+
+}
+
+#sidebar{ float: left; width: 138px; }
+
+#market{ height:47px; background:url(../img/gg_bg.gif) no-repeat; padding-top:4px; padding-left:5px;}
+
+#sidebar .content{ margin-left:8px;}
+
+#bg01{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img04.gif);
+
+	background-repeat: repeat-y;
+
+	padding-left:6px;
+
+}
+
+#bg02{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img06.gif);
+
+	background-repeat: repeat-x;
+
+	height: 23px;
+
+	width:114px;
+
+	padding-left:5px;
+
+}
+
+#bg03{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img08.gif);
+
+	background-repeat: repeat-x;
+
+	height: 25px;
+
+	width:432px;
+
+	margin-bottom:26px;
+
+}
+
+#bg04{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img15.gif);
+
+	background-position:0px 2px;
+
+	background-repeat: repeat-x;
+
+	height: 24px;
+
+	width:324px;
+
+}
+
+#bg05{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img18.gif);
+
+	background-repeat: repeat-x;
+
+	height: 33px;
+
+	width:114px;
+
+	padding-left:5px;
+
+	margin-bottom:5px;
+
+}
+
+.labela{ height:16px; border-bottom:1px solid #FFF6ED; border-left:1px solid #999; border-top:1px solid #999; font-weight:bold;float:left; padding:5px 2px 0 2px;}
+
+.labelb{ height:16px; border-left:1px solid #999; border-top:1px solid #999;border-bottom:1px solid #999;background:#F1EDEA; float:left; padding:5px 5px 0 5px;}
+
+.labelc{ height:25px; border-bottom:1px solid #FFF6ED; border-left:1px solid #979998; border-top:1px solid #979998; font-weight:bold;float:left; padding:5px 18px 0 18px;}
+
+.labeld{ height:25px; background:#F1EDEA; float:left; padding:5px 18px 0 18px;border-bottom:1px solid #999999; border-left:1px solid #999999; border-top:1px solid #999999;}
+
+.labele{ height:17px; background:#fff; float:left; padding:5px 10px 0 10px;border-bottom:1px solid #fff; border-left:1px solid #D9D7D8; border-top:1px solid #D9D7D8; font-weight:bold;}
+
+.labelf{ height:17px; background:#F0ECEB; float:left; padding:5px 10px 0 10px;border-bottom:1px solid #D9D7D8; border-left:1px solid #D9D7D8; border-top:1px solid #D9D7D8;}
+
+.labelf_a{ height:17px; float:left; padding:5px 0px 0px 16px;}
+
+.labelg{ height:29px; background:#FFF7ED; float:left; border-bottom:1px solid #fff; border-left:1px solid #999; border-top:1px solid #999; font-weight:bold;float:left;	padding:2px 1px 0 1px;}
+
+.labelh{ height:29px; background:#F0ECEB; float:left;border-bottom:1px solid #999; border-left:1px solid #999; border-top:1px solid #999;float:left;padding:2px 1px 0 1px;}
+
+.labeli{
+
+	height:16px;
+
+	float:left;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img25.gif);
+
+	background-repeat: no-repeat;
+
+	width: 124px;
+
+	text-align:center;
+
+	padding-top:6px;
+
+	font-weight:bold;
+
+}
+
+.labelj{
+
+	height:15px;
+
+	float:left;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img26.gif);
+
+	text-align:center;
+
+	padding-top:6px;
+
+	width: 125px;
+
+}
+
+.labelk{
+
+	height:15px;
+
+	float:left;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img28.gif);
+
+	text-align:center;
+
+	padding-top:6px;
+
+	width: 81px;
+
+	font-weight:bold;
+
+}
+
+.labell{
+
+	height:15px;
+
+	float:left;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img29.gif);
+
+	text-align:center;
+
+	padding-top:6px;
+
+	width: 81px;
+
+}
+
+.labeln{
+
+border-top:3px solid #044098;
+
+border-left:1px solid #044098;
+
+height:19px;
+
+background:#FFF6ED;
+
+float:left;
+
+padding:3px 13px 0 13px;
+
+}
+
+.labelm{
+
+	border-top:1px solid #044098;
+
+border-left:1px solid #044098;
+
+border-bottom:1px solid #044098;
+
+height:18px;
+
+background:#F2F5FA;
+
+float:left;
+
+padding:5px 13px 0 13px;
+
+}
+
+
+
+.labelo{ height:16px; border-bottom:1px solid #FFF6ED; border-left:1px solid #999; border-top:1px solid #999; float:left; padding:5px 11px 0 11px;}
+
+.labelp{ height:16px; border-left:1px solid #999; border-top:1px solid #999;border-bottom:1px solid #999; background:#F0ECEB; float:left; padding:5px 11px 0 11px;}
+
+#labelfw1{ float:right;padding:5px 10px 0px 0px;}
+
+#labelfw2{ float:right;padding:5px 10px 0px 0px;}
+
+#labelfw3{ float:right;padding:5px 10px 0px 0px;}
+
+.AG{ float:right;padding:0px 2px 0px 0px;}
+
+#labelgsxw1{ height:16px; float:right;padding:5px 10px 5px 0px;}
+
+#labelgsxw2{ height:16px; float:right;padding:5px 10px 5px 0px;}
+
+#labelgsxw3{ height:16px; float:right;padding:5px 10px 5px 0px;}
+
+#labelgsxw4{ height:16px; float:right;padding:5px 10px 5px 0px;}
+
+#labelgghd1{ height:16px; float:right;padding:5px 10px 5px 0px;}
+
+#labelgghd2{ height:16px; float:right;padding:5px 10px 5px 0px;}
+
+#labelgghd3{ height:16px; float:right;padding:5px 10px 5px 0px;}
+
+.list1{
+
+	background-repeat: no-repeat;
+
+	font-weight:bold;
+
+	/*padding-left:14px;*/
+
+	margin-top:15px;
+
+	margin-bottom:8px;
+
+	/*text-align:center;*/
+
+	text-align:left;
+
+}
+
+
+
+.list2_old{ border:1px solid #D3D3D3; background:#fff; width:808px;}
+
+.list2{ border:1px solid #D3D3D3; background:#fff; width:808px; float:left;}
+
+
+
+
+
+#list3{ width:433px; float:left; padding:18px 20px 0 17px;}
+
+#list4{ width:324px; float:left; padding-right:14px; padding-top:20px;}
+
+#list4_top{ width:322px; float:left; padding-right:14px; padding-top:10px;}
+
+
+
+#list4_ad{ width:322px; float:left; padding-right:14px; padding-top:20px; text-align:center;}
+
+#list5{ width:752px; height:48px; border:1px solid #DADADA; margin:12px 0 12px 20px; padding:10px 0 0 20px;}
+
+.list6{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img10.gif);
+
+	background-repeat: no-repeat;
+
+	height: 22px;
+
+	width: 776px;
+
+	clear:both;
+
+	margin-left:17px;
+
+	margin-top:12px;
+
+	margin-bottom:20px;
+
+}
+
+
+
+.list6 span{ float:right;}
+
+.list7 { width:380px; float:left; margin-left:16px;}
+
+.list8{ font-size:14px; color:#666}
+
+.list8 span{ float:right; font-size:12px; color:#000; line-height:24px;}
+
+.item1{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img11.gif);
+
+	background-repeat: repeat-x;
+
+	height: 23px;
+
+	padding:10px 0 0 7px;
+
+}
+
+.item1 span{ float:right;}
+
+.itme5{
+
+	color:#CC0000;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/ico6.gif);
+
+	background-repeat: no-repeat;
+
+	padding-left:17px;
+
+	background-position: 0px 6px;
+
+	line-height:25px;
+
+}
+
+.itme5 span{ float:right;}
+
+.text1{ float:left; margin:0; }
+
+.text1 span{ float: right; color:#666; }
+
+.text1 ul { padding:0; margin:0; list-style:none; 
+
+}
+
+.text1 li{
+
+	background-repeat: no-repeat;
+
+	padding-left:14px;
+
+	background-position: 5px 9px;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/ico7.gif);
+
+	overflow:hidden;
+
+	line-height:22px;
+
+}
+
+
+
+
+
+.text2{ float:left; margin:0; }
+
+.text2 ul { padding:0; margin:0; list-style:none; 
+
+}
+
+.text2 li{
+
+float:left;
+
+	background-repeat: no-repeat;
+
+	padding-left:14px;
+
+	line-height:22px;
+
+	background-position: 5px 9px;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/ico8.gif);
+
+	overflow:hidden;width:170px;
+
+	display:block;
+
+}
+
+.text2 a:visited { color: #0066CC;}
+
+.text2 a:hover { color: #0066CC; }
+
+.text2 a:link { color: #0066CC;}
+
+
+
+/* add 2008-12-23 by aaron */
+
+.addiv{ border-bottom:solid 1px #CFCFCF; padding-top:5px; height:24px;}
+
+
+
+.text2_2{ float:left; margin:0; }
+
+.text2_2 ul { padding:0; margin:0; list-style:none; }
+
+.text2_2 li{
+
+	float:left;
+
+	background-repeat: no-repeat;
+
+	padding-left:14px;
+
+	line-height:22px;
+
+	background-position: 5px 9px;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/ico8.gif);
+
+	overflow:hidden;width:130px;
+
+	display:block;
+
+}
+
+.text2_2 a:visited { color: #0066CC;}
+
+.text2_2 a:hover { color: #0066CC; }
+
+.text2_2 a:link { color: #0066CC;}
+
+/* add 2009-01-16 by aaron */
+
+.text2_3{ float:left; margin:0; }
+
+.text2_3 ul { padding:0; margin:0; list-style:none; }
+
+.text2_3 li{
+
+	float:left;
+
+	background-repeat: no-repeat;
+
+	padding-left:14px;
+
+	line-height:22px;
+
+	background-position: 5px 9px;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/ico8.gif);
+
+	overflow:hidden;width:135px;
+
+	display:block;
+
+}
+
+.text2_3 a:visited { color: #0066CC;}
+
+.text2_3 a:hover { color: #0066CC; }
+
+.text2_3 a:link { color: #0066CC;}
+
+
+
+
+
+.text3_old{ float:left; margin:0;line-height:22px; padding-left:4px;}
+
+.text3{ float:left; margin:0;line-height:22px; padding-left:4px; width:375px;}
+
+.text3 span{ float: right; color:#666;line-height:22px; }
+
+.text3 ul { padding:0; margin:0; list-style:none; 
+
+}
+
+.text3 li{
+
+	background-repeat: no-repeat;
+
+	padding-left:14px;
+
+	background-position: 5px 9px;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/ico7.gif);
+
+	overflow:hidden;
+
+	line-height:22px;
+
+}
+
+
+
+.text11{ float:left; margin:0; }
+
+.text11 span{ float: right; color:#666; }
+
+.text11 ul { padding:0; margin:0; list-style:none; 
+
+}
+
+.text11 li{
+
+	background-repeat: no-repeat;
+
+	padding-left:14px;
+
+	background-position: 5px 9px;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/ico7.gif);
+
+	overflow:hidden;
+
+	line-height:24px;
+
+}
+
+
+
+
+
+.font1{ font-family:黑体; font-size:18px; text-decoration:underline;}
+
+.font1_left{ font-family:黑体;font-size:14px;}
+
+.font1_1{ font-family:黑体;font-size:14px; float:left;}
+
+.font1_2{ font-family:黑体;font-size:14px; float:right;}
+
+.font_quote_l{float:left;}
+
+.font_quote_r{float:right;}
+
+.font_quote{ padding-right:10px;}
+
+
+
+.font2{ font-size:30px; font-weight:bold; color:#2C7A05; font-weight:bold;}
+
+.font3{ color:#2C7A05; font-size:12px;}
+
+.font4{ color:#F70000}
+
+.font5_old{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/ico11.gif);
+
+	background-repeat: no-repeat;
+
+	color:#797878;
+
+	line-height:20px;
+
+	padding-left:15px;
+
+	background-position: 2px 5px;
+
+	margin:10px 0 17px 0;
+
+}
+
+.font5{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/ico11.gif);
+
+	background-repeat: no-repeat;
+
+	color:#797878;
+
+	line-height:22px;
+
+	padding-left:15px;
+
+	background-position: 2px 8px;
+
+	margin:5px 0px 0px 0px;
+
+	/*height:60px;*/
+
+	/*height:88px;*/
+
+}
+
+.font5_new{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/ico11.gif);
+
+	background-repeat: no-repeat;
+
+	color:#797878;
+
+	line-height:22px;
+
+	padding-left:15px;
+
+	background-position: 2px 8px;
+
+	margin:0px 0px 1px 0px;
+
+	/*height:60px;*/
+
+	/*height:88px;*/
+
+}
+
+.font6{ color:#999;}
+
+.font7{ font-size:18px; font-family:黑体; color:#FF0000; font-weight:bold;}
+
+.font8{ margin:8px 0 4px 4px; color:#000;}
+
+.font9{ padding-left:7px; color:#999;}
+
+.font10{ color:#0036B0;}
+
+.font11{
+
+	font-size:14px;
+
+	font-weight:bold;
+
+	font-style: italic;
+
+}
+
+.h10_old{ padding-top:10px; clear:both; border-top:1px solid #BBB;}
+
+.h10{ height:10px; clear:both; border-top:1px solid #BBB;}
+
+
+
+.box1_old{ width:118px; border-right:1px solid #D3D3D3; background:#FCFCFC; float:left; text-align:center; height:57px; padding-top:22px;}
+
+.box1{
+
+	width:118px;
+
+	border-right:1px solid #D3D3D3;
+
+	float:left;
+
+	text-align:center;
+
+	height:57px;
+
+	padding-top:22px;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/add001.gif);
+
+	background-repeat: repeat-x;
+
+}
+
+
+
+.box2_del{ width:283px; float:left; text-align:center; padding-top:20px;}
+
+.box3_del{ width:370px; float:left; padding-top:25px; line-height:20px;}
+
+
+
+.box2{ width:100px; float:left; text-align:center; padding-top:20px; padding-right:5px;} 
+
+.box3{ float:left; padding-top:25px; padding-right:15px; }
+
+
+
+.box4{ float:left; padding:5px 0 0 13px;}
+
+.box5{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img12.gif);
+
+	background-repeat: repeat-x;
+
+	height: 24px;
+
+	padding:8px 6px 0 12px;
+
+	margin-top:10px;
+
+}
+
+.box5 span{ float:right;}
+
+.box6{ line-height:20px;}
+
+.box6 .tb1_new{
+
+	border-bottom:1px dotted #CFCFCF;
+
+	height:25px;
+
+	padding-left:8px;
+
+}
+
+.box6 .tb2_new{
+
+	padding-left:8px;
+
+	height:25px;
+
+	border-left:1px solid #CFCFCF;
+
+	border-bottom:1px dotted #CFCFCF;
+
+}
+
+.box6 .tb3_new{
+
+	height:100px;
+
+	padding-left:8px;
+
+}
+
+.box6 .tb4_new{
+
+	padding-left:8px;
+
+	height:25px;
+
+	border-left:1px solid #CFCFCF;
+
+}
+
+.box6 .tb5_new{
+
+	height:44px;
+
+	padding-left:8px;
+
+}
+
+.box6 .tb7_new{
+
+	height:44px;
+
+	padding-left:8px;
+
+	border-bottom:1px dotted #CFCFCF;
+
+}
+
+.box6 .tb6_new{
+
+	padding-left:8px;
+
+	height:50px;
+
+	border-left:1px solid #CFCFCF;
+
+}
+
+
+
+.box7_old{ width:298px; border-left:1px solid #DADADA;border-right:1px solid #DADADA; border-bottom:1px solid #DADADA; padding:5px 10px 5px 12px; line-height:21px;}
+
+.box7{ width:298px; border-left:1px solid #DADADA;border-right:1px solid #DADADA; border-bottom:1px solid #DADADA; padding:10px 10px 10px 12px; line-height:21px; float:left;}
+
+
+
+.box8{ padding:0 13px 0 17px;}
+
+.box9 td{ border-bottom:1px solid #D9DBDA; line-height:24px; text-align:center;}
+
+.box9 .title2 td{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img16.gif);
+
+	background-repeat: repeat-x;
+
+	height: 28px;
+
+	color:#000;
+
+	border:none;
+
+}
+
+.box9 .title4{ text-align:left; padding-left:20px;}
+
+.box10{ border:1px solid #CCC; float:left;}
+
+.box101{ border:1px solid #CCC;float:left;padding:10px 100px 10px 100px;width /* */:371px;width:571px !important;}
+
+.box10 .tb1{ float:left; width:250px; padding-left:21px; padding-top:12px;}
+
+.box10 .tb2{ float:left;padding-top:5px; line-height:24px;}
+
+.box10 .tb2a{ float:left;padding-top:8px; line-height:23px;}
+
+.box10 .tb3{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/dot2.gif);
+
+	background-repeat: no-repeat;
+
+	background-position: 13px 10px;
+
+	height: 24px;
+
+	padding:16px 0 0 34px;
+
+}
+
+.box11 .title3 td{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img17.gif);
+
+	background-repeat: repeat-x;
+
+	height: 32px;
+
+	color:#000;
+
+	text-align:center;
+
+}
+
+.box11 td{ border-bottom:1px solid #D9DBDA; line-height:24px; text-align:center; border-right:1px solid #D9DBDA}
+
+.box11 .nono td{ border-right:none;}
+
+.box11 .left{ text-align:left; padding-left:20px;}
+
+.box12  td{ border-bottom:1px solid #CCC; line-height:22px;}
+
+.box12  tr{ margin:10px 0 10px 0;}
+
+.box12 .arrow{
+
+	font-size:14px;
+
+	color:#000;
+
+}
+
+.box13{ width:375px; float:left; margin-left:14px;}
+
+.box13 .h1_old{ background:#CFE0F4; height:19px;width:375px; font-weight:bold; padding:7px 0 0 5px;}
+
+.box13 h1{ background:#FAEBC2; height:19px;width:375px; font-weight:bold; padding:7px 0 0 5px;}
+
+.box13 dl{ background:#FAEBC2; height:19px;width:375px; font-weight:bold; padding:7px 0 0 5px;}
+
+.box14  td{ border-bottom:1px solid #D6D1CB; line-height:22px; text-align:center; font-size:12px; background:#FFF7ED;}
+
+.box15_old{ font-size:14px; line-height:20px; padding:9px 0 10px 5px; border:1px solid #D3D3D3; background:#F4F5F7; width:118px; margin-top:9px; margin-bottom:4px;}
+
+.box15{ font-size:14px; line-height:20px; padding:9px 0 0 2px; border:1px solid #D3D3D3; background:#F4F5F7; width:118px; margin-top:9px; margin-bottom:4px; height:75px;}
+
+.box15_ad{ font-size:14px; padding:0px; border:1px solid #D3D3D3; background:#F4F5F7; width:120px; margin-top:9px; margin-bottom:4px; height:84px;}
+
+.box15_updown { padding:0px 10px 0px 5px;}
+
+.box16{
+
+	font-family:黑体;
+
+	width:88px;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img20.gif);
+
+	background-repeat: repeat-x;
+
+	height: 20px;
+
+	display:block;
+
+	margin-bottom:5px;
+
+	font-weight:bold;
+
+}
+
+.box17{ margin:5px 0 10px 13px; line-height:19px;}
+
+.h5{ padding:5px 0 10px 0;text-align:center;}
+
+
+
+
+
+/* 菜单 */
+
+#menu.menu2{ width:111px;}
+
+#menu.menu2 dt{
+
+	height:24px;
+
+	cursor:pointer;
+
+	font-weight:bold;
+
+	padding-left:21px;
+
+	line-height:24px;
+
+	margin-bottom:1px;
+
+}
+
+#menu.menu2 dd{height:22px; line-height:22px; background:#F7DEC0;}
+
+#menu.menu2 dd a{display:block; width:100px; padding-left:10px; color:#4E4D49; margin:0 2px 0 2px;}
+
+#menu.menu2 dd a:hover{background:#FFB556; color:#cc0000; text-decoration:none;}
+
+#menu.menu2  .dt_open{background: url(http://stockdata.stock.hexun.com/2008/img/img19.gif) no-repeat left top; }
+
+#menu.menu2 .dt_closed{background: url(http://stockdata.stock.hexun.com/2008/img/img01.gif) no-repeat left top;}
+
+
+
+.input1{ text-align:center; font-size:12px;width:90px;}
+
+#nav1_old{ border:1px solid #CBCBCB; height:25px; padding-top:15px; padding-left:6px;}
+
+#nav1{ width: 952px; margin:0 auto;border:1px solid #CBCBCB; height:25px; padding-top:15px; padding-left:6px;}
+
+.input2{background:#fff; border:1px solid #999; color:#999;width:98px; height:18px; line-height:18px; text-align:left;}
+
+
+
+a.bule:visited,a.bule:hover,a.bule:link { color:#0066A4;}
+
+a.red:visited,a.red:hover,a.red:link { color:#CC0000;}
+
+a.red2:visited,a.red2:hover,a.red2:link { color:#CC0000; text-decoration:underline;}
+
+
+
+.box18{ padding:11px 0 11px 655px;  clear:both;}
+
+.box19{ padding:10px 0 10px 440px;  clear:both;}
+
+#wrap4{ width:958px; margin:0 auto;border-bottom:1px solid #ccc; border-left:1px solid #ccc; border-right:1px solid #ccc; padding-top:13px;}
+
+#wrap4 .label{ width:925px; border-bottom:1px solid #044099;border-left:1px solid #044099;border-right:1px solid #044099; margin:0 0 0 17px; background:#FFF6ED;}
+
+#wrap4 .labelbj{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img32.gif);
+
+	background-repeat: repeat-x;
+
+	height: 25px;
+
+	margin:0 14px 0 17px;
+
+	font-size:14px;
+
+}
+
+
+
+#wrap4 .content{ width:908px;  margin:7px 0 0 8px; border:1px solid #ccc; border-right:1px solid #666; border-bottom:1px solid #666; float:left; clear:both; background:#fff; }
+
+#wrap4 .content1{ width:570px; float:left;margin-top:12px}
+
+#wrap4 .content2{  float:left; margin-top:12px;}
+
+#wrap4 .content3{  float:left; width:449px; margin-left:17px; margin-top:22px;}
+
+#wrap4 .content3 h1{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img37.gif);
+
+	background-repeat: no-repeat;
+
+	height: 17px;
+
+	padding-left:16px;
+
+	margin-bottom:15px;
+
+}
+
+#wrap4 .content4{ line-height:25px;}
+
+#wrap4 .content4 .f1{ padding-left:15px;}
+
+#wrap4 .content4 .f2 td{ background:#ECECEC}
+
+#wrap4 .content4 .f3{ color:#044099;}
+
+#wrap4 .content4 .f4{ color:#044099; text-align:right; padding-right:8px;}
+
+#all{ width:600px; background:#F5EAD9; margin:0 auto 0;}
+
+#all h3{ background:#EBD8BF; height:31px; border-bottom:3px solid #BBBAB9;}
+
+#all .tb10{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img53.gif);
+
+	background-repeat: no-repeat;
+
+	background-position: right 0px;
+
+	height: 18px;
+
+	border-bottom:1px solid #B6B5B3;
+
+	border-top:1px solid #B6B5B3;
+
+	padding-top:5px;
+
+}
+
+#all .tb11{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img54.gif);
+
+	background-repeat: no-repeat;
+
+	background-position: right 0px;
+
+	height: 18px;
+
+	border-bottom:1px solid #B6B5B3;
+
+	padding-top:5px;
+
+}
+
+.company{ margin:20px 0 50px 0;}
+
+.company span{
+
+	float:left;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/ico7.gif);
+
+	background-repeat: no-repeat;
+
+	width:62px;
+
+	padding-left:12px;
+
+	background-position: 0px 10px;
+
+	line-height:29px;
+
+}
+
+.add18 span{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img36.gif);
+
+	background-repeat: no-repeat;
+
+	height: 24px;
+
+	width: 103px;
+
+	display:block;
+
+	float:left;
+
+	padding-top:7px;
+
+	text-align:center;
+
+	margin:0 8px 7px 0;
+
+}
+
+.add18.add19{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img35.gif);
+
+	background-repeat: no-repeat;
+
+	height: 24px;
+
+	width: 103px;
+
+	float:left;
+
+	font-weight:bold;
+
+	padding-top:7px;
+
+	text-align:center;
+
+	margin:0 8px 7px 0;
+
+}
+
+#add20{border:1px solid #B3B3B2; background:#F5F5F5; padding:10px; margin-top:6px; width:307px;}
+
+#add21{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/img55.gif);
+
+	background-repeat: repeat-x;
+
+	height: 23px;
+
+	padding-left:5px;
+
+	margin-bottom:10px;
+
+}
+
+#secnav_del{ width: 958px; border-left: 1px solid #ccc; border-right: 1px solid #ccc;border-top: 1px solid #ccc;float: left; line-height: 26px; text-align: left; text-indent: 5px; height: 26px; }
+
+#secnav_del a{padding:0 1px 0 2px; }
+
+#topstock_del{ border-bottom:2px solid #000; padding:10px 7px 10px 6px; width: 945px;}
+
+#topstock_del span{ float:right;}
+
+.add22{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/bg05.gif);
+
+	background-repeat: no-repeat;
+
+	height: 19px;
+
+	width: 244px;
+
+	margin-bottom:4px;
+
+}
+
+.add23{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/bg02.gif);
+
+	background-repeat: no-repeat;
+
+	height: 19px;
+
+	width: 308px;
+
+	margin-top:3px;
+
+}
+
+/* header */
+
+
+
+
+
+/* aaron add */
+
+.floattable {
+
+	width: 198px;
+
+	position: absolute;
+
+}
+
+.selected {
+
+	background-color: #E9F7FE;
+
+}
+
+table.ajaxtable td {
+
+	text-align: center;
+
+	color: #666666;
+
+	line-height: 20px;
+
+}
+
+table.ajaxtable {
+
+	border: 1px dashed #CCCCCC;
+
+	background-color:#FFFFFF;
+
+}
+
+
+
+.box10 .tb2_new{ float:left;padding-top:22px; line-height:24px;} 
+
+
+
+#zdsx a{color:#000;}
+
+#zdsx h3 { background:url(../img/gg_mark.gif) no-repeat; padding-left:14px;}
+
+.cwdesc {height:40px; padding-top:10px; padding-left:10px;}
+
+.cwpic { text-align:center; padding-bottom:10px;}
+
+
+
+.index a{ color: #000; text-decoration: none; }
+
+.index a:hover{ color: #000; text-decoration: none; }
+
+
+
+.yhdc { padding:30px 0px 0px 30px; color:Red;}
+
+.yhdc a{color:Red;text-decoration: none;}
+
+.yhdc a:hover{ color:Red; text-decoration: underline; }
+
+.shoucang { margin-left:10px;}
+
+
+
+#mail{ border-bottom:1px solid #E0DBD7;border-top:1px solid #D6D3CF; border-left:1px solid #D6D3CF;border-right:1px solid #D6D3CF; padding:8px; width:105px; line-height:18px; margin:5px 0 8px 0;}
+
+#mail .gray{ color:#636766}
+
+
+
+
+
+#mail_sub{ margin-left:8px;background-color:#F5E9D9;border-bottom:1px solid #E0DBD7;border-top:1px solid #D6D3CF; border-left:1px solid #D6D3CF;border-right:1px solid #D6D3CF; padding:8px; width:105px; line-height:18px;}
+
+#mail_sub .gray{ color:#636766}
+
+
+
+#divpop {font-size:12px;border:1px solid #D6D3CF;background:#F7F7F7;position:absolute;line-height:20px; width:104px; text-align:center; border-top:0px;}  
+
+
+
+#zdsx{background:url(http://stockdata.stock.hexun.com/2008/img/smallDot.gif) no-repeat 0 2px;}
+
+#zdsx span{float:right;background:url(../img/gg_mark.gif) no-repeat; padding-left:14px;}
+
+
+
+/**
+
+  SEO优化 2009.7.16
+
+*/
+
+h1.shoucang{text-indent:-9999px}
+
+h1.shoucang a{background:url(http://stockdata.stock.hexun.com/2008/img/shoucang_1.gif) no-repeat; display:block; width:111px; height:60px}
+
+.h-gegu{height:154px; overflow:hidden; }
+
+
+
+
+
+
+
+
+
+/* seo 优化 增加资讯模块 */
+
+.addbox03{ width:375px; float:left; }
+
+.addbox03 a{ color:#000; text-decoration:none;}
+
+.addbg03{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/03bg.gif);
+
+	background-repeat: repeat-x;
+
+	height: 23px;
+
+	padding-left:5px;
+
+}
+
+.addbg03 p{ margin:0; padding:0; float:left;}
+
+.addbg03 .label2{ border-left:1px solid #9A9899; border-top:1px solid #8A8A8A; height:16px; background:#fff; padding:5px 8px 0 8px; border-bottom:1px solid #fff;}
+
+.addbg03 .label1{
+
+	border-left:1px solid #9A9899; border-top:1px solid #9A9899; background:#F0ECEB;height:16px;padding:5px 8px 0 8px;
+
+}
+
+.addbg03 .more{ float:right; padding-top:3px;}
+
+.addtext03{ padding:10px 0 10px 0;}
+
+.addtext03 li{
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/icon2.gif);
+
+	background-repeat: no-repeat;
+
+	padding-left:11px;
+
+	line-height:20px;
+
+	background-position: 4px 8px;
+
+}
+
+.addtext03 li span{ float:right; color:#666; padding-right:5px;}
+
+.font1a{
+
+	font-weight:bold;
+
+	background-image: url(http://stockdata.stock.hexun.com/2008/img/icon3.gif);
+
+	background-repeat: no-repeat;
+
+	padding-left:21px;
+
+	margin-bottom:12px;
+
+	margin-top:20px;
+
+	border-bottom:1px solid #2F4463;
+
+	line-height:25px;
+
+	background-position: 0px 5px;
+
+}
+
+.box19a{ padding:10px 0 10px 0;  clear:both; float:right;}
+
+
+
+
+
+/*2010-05-11 new added*/
+
+.hllist2{ border:1px solid #D3D3D3; background:#fff; width:808px; float:left;}
+
+.hllist6{ background:url(../img/img10.gif); width:776px; height:22px;margin-left:17px;
+
+	margin-top:12px;
+
+	margin-bottom:20px;}
+
+
+
+.hllist6 span,.addtitle span{ float:right;}
+
+.hltable1{ color:#232675; line-height:22px;}
+
+.hltable1 td{ background:#fff; padding-left:5px;}
+
+.hlred{ color:#fb0007; font-weight:bold;}
+
+.hlblack{ color:#000;}
+
+.hladdtext1 { padding:5px 0 5px 0;}
+
+.hladdtext1 li{ line-height:22px;}
+
+.hladdtext1 li a{ text-decoration:underline;}
+
+.hladdtitle span a{ text-decoration:none; color:#000; font-weight:normal;float:right}
+
+.hladdtitle a{ text-decoration:underline; color:#fb0007; font-weight:bold;}
+
+.hladdtext2 a{ font-weight:bold; color:#003ca2;}
+
+.hladdtext2 td{ background:#f8f8f8;}
+
+
+
+
+
+/* 2011-05-06 fxx 公司简介 */
+
+.box5 .box5Span{float:right;}
+
+.box5 .box5Span a{padding-left:7px;}
+
+.box5 .box5Span a.outstand{color:red;}
+
+
+
+/* 大宗交易 融资融券 */
+
+.allCon{border-bottom:1px solid #ccc;}
+
+.allCon th{border-top:1px solid #ccc;border-right:1px solid #ccc;border-bottom:2px solid #EAEAEA;height:46px;font-weight:normal;}
+
+.allCon td{border-top:1px solid #ccc;border-right:1px solid #ccc;height:46px;}
+
+.allCon td.padLR{padding:0 6px;}
+
+.allCon td img{cursor:pointer;}
+
+.pageFoot{text-align:right;padding:18px 10px 0 0;}
+
+.pageFoot a{display:inline-block;width:50px;padding-top:3px;height:18px;border:1px solid #ccc;text-align:center;line-height:18px;}
+
+.pageFoot input.textFoot{width:20px;height:16px;border:1px solid #ccc;padding:2px;}
+
+.rzrqCon th{height:22px;font-weight:normal;}
+
+.rzrqCon td{text-align:right;}
+
+.rzrqCon td.textCon{text-align:center;}
+
+.rzrqCon td.r2{border-right:2px solid #ccc;}
+
+
+

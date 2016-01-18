@@ -43,7 +43,7 @@ def calculate_everyday_bvps():
     bvps_df.sort_index(inplace=True)
     bvps_df.to_csv("bvps.csv",sep=',', encoding='utf-8')
 
-# equity change ---------------- 每季度股东权益变化 = 股东权益变化 + 拨备 - 不良
+# equity change ---------------- 每季度股东权益变化 = 股东权益变化（万） + 拨备 - 不良 (亿)
 
 def concat_equity_change():
     equity_change_dfs = []
@@ -64,7 +64,7 @@ def concat_equity_change():
             if last_row['restore_ratio'] < 2.5:
                 restore_year = (index + 1) * 0.25 #若为2015年第三季度，要在0.25年内达标。要在restore_year年内达标。
                 restore_should_increase = (2.5 - last_row['restore_ratio'])/restore_year 
-            equity_change = row['equity'] - last_row['equity'] + 0.75 * last_row['total_loan'] * (row['restore_ratio'] - (restore_should_increase + last_row['restore_ratio']) - row['bad_loan_ratio'] + last_row['bad_loan_ratio'])
+            equity_change = (row['equity'] - last_row['equity'])/10000 + 0.0075 * last_row['total_loan'] * (row['restore_ratio'] - (restore_should_increase + last_row['restore_ratio']) - row['bad_loan_ratio'] + last_row['bad_loan_ratio'])
             equity_changes.append(equity_change)
 
         equity_change_df = pd.DataFrame(equity_changes)
@@ -106,14 +106,4 @@ def calculate_equity_change():
     bvps_df.to_csv("equityChange.csv",sep=',', encoding='utf-8')
 
 
-# equity change ---------------- 总股本 =  equity/bvps
-def calculate_total():
-    for bank in banks:
-        print bank
-        report_file_name = "reportData/" + bank + ".csv"
-        report_df = pd.read_csv(report_file_name,sep=',', encoding='utf-8')
-        report_df['total'] = report_df['equity']/report_df['bpvs']
-        print report_df
-        break
-
-calculate_total()
+calculate_equity_change()

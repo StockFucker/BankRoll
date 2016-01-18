@@ -1,0 +1,73 @@
+/*最新修改一级导航/尾部样式*/
+
+/*login*/
+#topbanner{ width:960px; height:90px;}
+#newsHeaderNav{ border:1px solid #ccc; height:27px; padding:0px 0 0 0;margin-top: 5px;}
+#newsHeaderNav .homeword{display:block; width:auto; padding-top:5px; height:22px; overflow:hidden}
+#newsHeaderNav .homeword li{ float:left;background:url(http://img.hexun.com/img/headernavicon.gif) no-repeat right 7px; line-height:18px; padding:0 9px 4px 5px;}
+#newsHeaderNav .none{padding-right:0; background:none !important;}
+
+/*login--username*/
+#newsHeaderNav .login{ width: 92px; float: right; border-left:1px solid #ccc; color: #144E7E; line-height:18px; text-align: right; height: 22px; padding-top:5px;}
+#newsHeaderNav .login li{ float: left; width: 40px; color: #949494; text-align: center; overflow: hidden; height: 20px;}
+#newsHeaderNav .login .logout{ width: 92px; text-align:right; display:inline;}
+#newsHeaderNav .login .logout div{ float:left;}
+#newsHeaderNav .login .username{ width: 40px; float: left; text-align: right; height: 20px; overflow: hidden;}
+#newsHeaderNav .login li a{ padding: 0 5px; color: #000; }
+
+/* header */
+.detail_header2010{ width: 960px; margin: 0 auto; }
+.detail_header2010 *{ padding: 0; margin: 0; list-style: none; font-size: 12px; }
+.detail_header2010 a:link{ text-decoration: none; color:#000 }
+.detail_header2010 a:visited{ text-decoration: none; color:#000 }
+.detail_header2010 a:hover{ text-decoration: underline; color:#900;}
+
+/*.detail_header2010 #logoetc{ float: left; padding: 21px 0 4px 0; }*/
+.detail_header2010 #logoetc{ float: left; padding:0px; background:url(http://img.hexun.com/img/2010/headbg.gif) repeat-x; height:40px; color:#fff; width:960px; overflow:hidden}
+.detail_header2010 #logoetc a{ color:#fff}
+.detail_header2010 .logo{ float: left; background:url(http://img.hexun.com/img/2010/headbg.gif) repeat-x 0 bottom; height:40px; }
+.detail_header2010 .logo img{ float:left}
+.detail_header2010 .date{ float: left; padding: 16px 0px 0px 8px; color: #666; line-height: 17px; color:#cae0fe }
+.detail_header2010 #logoetc .seach_head{ float: right; width:520px; padding-top:12px;}
+.input2 { vertical-align:middle;}
+
+/* footer */
+#footer{ width: 100%; padding: 0px; margin: 0px; color: #000000; text-align: center; }
+#footer *{ padding: 0; margin: 0; font-size: 12px; }
+#footer li{ display: inline; color: #000; }
+#footer a{ color: #000; text-decoration: none; }
+#footer a:hover{ text-decoration: underline; }
+#footer .link{ border-bottom: 1px solid #000;  background:url(http://img.hexun.com/img/2010/footerbg.gif) repeat-x; height:22px; padding-top:15px; }
+#footer .copyright{ padding-top: 6px; font-family: Arial, Helvetica, sans-serif; line-height: 1.7em; }
+
+#secnav{ border:1px solid #bebebe;border-bottom:1px solid #ccc; height:27px; line-height:27px;color:#9c9c9c; font-size:10px; padding-left:10px;}
+#secnav a{ padding:0px 1px; font-size:12px;}
+
+#hexunMember_nologinSetup_div_display_nologin a{ padding:0px 5px;}
+#hexunMember_isloginedSetup_div_display a{ padding:0px 5px; }
+#hexunMember_isloginedSetup_div_display{ width:110px; float:right; padding-top:6px;}
+#hexunMember_isloginedSetup_div_display span{ float:left}
+#hexunMember_isloginedSetup_span_display_username{ width:68px; text-align:right; height:22px; overflow:hidden;word-break:break-all;}
+#hexunMember_isloginedSetup_div_display,#hexunMember_nologinSetup_div_display_nologin {border-left:1px solid #ccc; color:#949494; height:22px; padding-top:5px; line-height:20px;}
+
+.input2{background:#fff; border:1px solid #999; color:#999;width:98px; height:18px; line-height:18px; text-align:left;}
+.detail_header2010 #logoetc .seach_head table td {color:#FFF;}
+.floattable {position:absolute; width:198px}
+
+.floattable {
+	width: 198px;
+	position: absolute;
+	z-index:9999;
+}
+.selected {
+	background-color: #E9F7FE;
+}
+.detail_header2010 #logoetc .seach_head table.ajaxtable td {	
+        text-align: center;
+	color: #666666;
+	line-height: 20px;
+}
+table.ajaxtable {
+	border: 1px dashed #CCCCCC;
+	background-color:#FFFFFF;
+}
