@@ -21,6 +21,9 @@ def clean_bank():
         
         df = df[df['date'] > "2008-08-01"]
 
+        # 去掉逗号
+        df = df.replace({',': ''}, regex=True)
+      
         # 填充空白数据
         for index, row in df.iterrows():
             if index == len(df.index) - 1:
@@ -39,18 +42,19 @@ def clean_bank():
             if row['bad_loan_ratio'] == '--':
                 row['bad_loan_ratio'] = str(float(row['bad_loan']) / float(row['total_loan']))
             if row['total_loan'] == '--':
-                row['total_loan'] = str(float(row['bad_loan']) / float(row['bad_loan_ratio']))
+                row['total_loan'] = str(float(row['bad_loan']) / float(row['bad_loan_ratio']) * 100) 
             if row['bad_loan'] == '--':
-                row['bad_loan'] = str(float(row['total_loan']) * float(row['bad_loan_ratio']))
-        
+                row['bad_loan'] = str(float(row['total_loan']) * float(row['bad_loan_ratio']) / 100) 
         df = df[df['date'] > "2009-01-01"]
         df = df.set_index(['date'])
 
         df[['restore_cover_ratio', 'bad_loan','total_loan']] = df[['restore_cover_ratio', 'bad_loan','total_loan']].astype(float)
         df['restore_ratio'] = df['restore_cover_ratio'] * df['bad_loan'] / df['total_loan']
+
+        print df
+
         df = df.drop(df.columns[[0,2]],1)
         
-        print df
         to_file_name = bank + ".csv"
         df.to_csv(to_file_name,sep=',',encoding='utf-8')
 
