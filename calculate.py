@@ -106,4 +106,5 @@ def calculate_equity_change():
     bvps_df.to_csv("equityChange.csv",sep=',', encoding='utf-8')
 
 
-calculate_equity_change()
+calculate_equity_change()  
+#需要单元测试

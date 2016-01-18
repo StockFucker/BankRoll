@@ -90,10 +90,6 @@ def fetch_data_url_2(code,url):
             texts = map(extract_text,tds)
             csv_writer.writerow(texts)
 
-def clean_diverse_data():
-    for bank in banks:
-        file_name = bank + ".csv"
-        df = pd.read_csv(file_name)
-        print df
+
 
 clean_diverse_data()
