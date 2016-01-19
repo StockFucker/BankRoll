@@ -12,7 +12,7 @@ def clean_diverse_data():
         file_name = "originData2/" + bank + ".csv"
         df = pd.read_csv(file_name)
         to_drop = range(0,len(df.axes[1]))
-        to_drop.remove(0)
+        to_drop.remove(4)
         to_drop.remove(5)
         df = df.drop(df.columns[to_drop],1)
 
@@ -22,6 +22,7 @@ def clean_diverse_data():
         df = df[df['diverse'] != '0.00']
         df['diverse'] = df['diverse'].astype(float)
         df['diverse'] = -df['diverse']
+        df = df[df['date'] != '-']
         df['date'] = pd.to_datetime(df['date'])
         df = df.set_index('date')
         
@@ -69,8 +70,8 @@ def clean_diverse_data():
             df = pd.concat([df,df3], axis=0)
 
         df = df.sort()
-        print df
         df.to_csv(bank + ".csv")
 
+        print df
 
 clean_diverse_data()

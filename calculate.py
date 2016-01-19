@@ -117,7 +117,6 @@ def concat_equity():
         file_name = "reportData/" + bank + ".csv"
         bank_df = pd.read_csv(file_name, index_col = 0,parse_dates = True)
         bank_df = bank_df.drop(bank_df.columns[[0]],1)
-        bank_df = bank_df.rename(columns = {'equity':bank})
 
         diverse_file_name = 'diverseData/' + bank + '.csv'
         diverse_df = pd.read_csv(diverse_file_name, index_col = 0,parse_dates = True)
@@ -130,17 +129,18 @@ def concat_equity():
                 continue
             selected_date = selected_band_df.index[0]
             date_interval = (diverse_date - selected_date) / pd.offsets.Day(1)
+            selected_index = list(bank_df.index).index(selected_date)
+            equity = bank_df.iloc[selected_index]['equity']
+            bank_df.iloc[selected_index]['equity'] = equity + (1 - date_interval/365) * float(row['diverse'])
 
-            print bank_df
-            equity = float(bank_df.iloc[selected_date]['equity'])
-            bank_df.iloc[selected_date]['equity'] = str(equity + (1 - date_interval/365) * float(row['diverse']))
-            print bank_df
-
+        bank_df = bank_df.rename(columns = {'equity':bank})
         bank_dfs.append(bank_df)
-    # bvps_df = pd.concat(bank_dfs, axis=1)
-    # return bvps_df
 
-def calculate_average_change():
+    bvps_df = pd.concat(bank_dfs, axis=1)
+    #print bvps_df
+    return bvps_df
+
+def calculate_average_equity():
     df = pd.read_csv('prices.csv',sep=',', encoding='utf-8')
     df['date'] = pd.to_datetime(df['date'])
 
@@ -148,17 +148,24 @@ def calculate_average_change():
     equity_dates = list(equity_df.index)
     equity_dates.append(pd.Timestamp('2016-01-01'))
     
-    current_report_date_index = 7
-    for date, row in df.iterrows():
-        report_date = equity_dates[current_report_date_index]
+    equity_df = equity_df.T
+    current_report_date_index = 3
 
-        if date >= report_date: #如果相等，则采用原值
+    for index, row in df.iterrows():
+        date = row['date']
+        equity_date = equity_dates[current_report_date_index]
+        next_equity_date = equity_dates[current_report_date_index + 5]
+        if date >= next_equity_date: #如果相等，则采用原值
             current_report_date_index += 1
+            continue
+        #equity_df 里插入非财报日的预测数据
+        equity_df[date] = equity_df[equity_date]
 
-        last_equity_date = equity_dates[current_report_date_index - 4]
+    equity_df = equity_df.T
+    equity_df = equity_df[equity_df.index > pd.Timestamp('2011-01-01')]
+    equity_df.sort_index(inplace=True)
 
+    print equity_df
+    equity_df.to_csv("equityAverage.csv",sep=',', encoding='utf-8')
 
-
-
-    
-concat_equity()
+calculate_average_equity()
