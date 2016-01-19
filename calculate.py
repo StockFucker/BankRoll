@@ -5,6 +5,7 @@ banks = ["600000","002142","600036","601998","601169","601166","601009","000001"
 
 
 # bvps ---------------- 每日净资产
+# 需要单元测试
 
 def concat_bvps():
     bank_dfs = []
@@ -44,6 +45,7 @@ def calculate_everyday_bvps():
     bvps_df.to_csv("bvps.csv",sep=',', encoding='utf-8')
 
 # equity change ---------------- 每季度股东权益变化 = 股东权益变化（万） + 拨备 - 不良 (亿)
+# 需要单元测试
 
 def concat_equity_change():
     equity_change_dfs = []
@@ -105,6 +107,58 @@ def calculate_equity_change():
     print bvps_df
     bvps_df.to_csv("equityChange.csv",sep=',', encoding='utf-8')
 
+# equity average ---------------- 股东权益平均值 = 初始股东权益 - 分红 + 再融资 (万)
+# 需要单元测试
 
-calculate_equity_change()  
-#需要单元测试
+
+def concat_equity():
+    bank_dfs = []
+    for bank in banks:
+        file_name = "reportData/" + bank + ".csv"
+        bank_df = pd.read_csv(file_name, index_col = 0,parse_dates = True)
+        bank_df = bank_df.drop(bank_df.columns[[0]],1)
+        bank_df = bank_df.rename(columns = {'equity':bank})
+
+        diverse_file_name = 'diverseData/' + bank + '.csv'
+        diverse_df = pd.read_csv(diverse_file_name, index_col = 0,parse_dates = True)
+
+        for diverse_date, row in diverse_df.iterrows():
+
+            selected_band_df = bank_df[bank_df.index < diverse_date]
+
+            if len(selected_band_df.index) == 0:
+                continue
+            selected_date = selected_band_df.index[0]
+            date_interval = (diverse_date - selected_date) / pd.offsets.Day(1)
+
+            print bank_df
+            equity = float(bank_df.iloc[selected_date]['equity'])
+            bank_df.iloc[selected_date]['equity'] = str(equity + (1 - date_interval/365) * float(row['diverse']))
+            print bank_df
+
+        bank_dfs.append(bank_df)
+    # bvps_df = pd.concat(bank_dfs, axis=1)
+    # return bvps_df
+
+def calculate_average_change():
+    df = pd.read_csv('prices.csv',sep=',', encoding='utf-8')
+    df['date'] = pd.to_datetime(df['date'])
+
+    equity_df = concat_equity()
+    equity_dates = list(equity_df.index)
+    equity_dates.append(pd.Timestamp('2016-01-01'))
+    
+    current_report_date_index = 7
+    for date, row in df.iterrows():
+        report_date = equity_dates[current_report_date_index]
+
+        if date >= report_date: #如果相等，则采用原值
+            current_report_date_index += 1
+
+        last_equity_date = equity_dates[current_report_date_index - 4]
+
+
+
+
+    
+concat_equity()
