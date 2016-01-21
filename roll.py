@@ -45,7 +45,7 @@ def getPriceFrom(df,code,date):
 
 def trade():
     
-    df = pd.read_csv('hold.csv',sep=',', encoding='utf-8',dtype={'code': str})
+    df = pd.read_csv('result/hold.csv',sep=',', encoding='utf-8',dtype={'code': str})
     price_df = pd.read_csv('fq_prices.csv',sep=',', encoding='utf-8')
     df = df.merge(price_df,left_on = 'date',right_on = 'date',how = 'left')
     df['date'] = pd.to_datetime(df['date'])
@@ -92,7 +92,7 @@ def trade():
     plot = ggplot(df,aes(x = "date", y = "value",color = "variable")) + geom_line()
     print plot
 
-
+trade()
 
 def calculate_diverse():
     diverse_dfs = []

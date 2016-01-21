@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
+import math
 
 banks = ["600000","002142","600036","601998","601169","601166","601009","000001","601398","601988","601818","601328","601939","601288","600015","600016"]
-
 
 # bvps ---------------- 每日净资产
 # 需要单元测试
@@ -12,7 +12,7 @@ def concat_bvps():
     for bank in banks:
         file_name = "reportData/" + bank + ".csv"
         bank_df = pd.read_csv(file_name, index_col = 0,parse_dates = True)
-        bank_df = bank_df.drop(bank_df.columns[[1]],1)
+        bank_df = bank_df.drop(bank_df.columns[[1,2]],1)
         bank_df = bank_df.rename(columns = {'bpvs':bank})
         bank_dfs.append(bank_df)
     bvps_df = pd.concat(bank_dfs, axis=1)
@@ -36,13 +36,12 @@ def calculate_everyday_bvps():
             current_bvps_date_index += 1
             continue
         #在bvps_df 里插入非财报日的预测数据
-        date_interval = (date - bvps_date) / pd.offsets.Day(1)
-        last_date = bvps_dates[current_bvps_date_index - 4]
-        bvps_df[date] = (bvps_df[bvps_date] - bvps_df[last_date]) / 365 * date_interval + bvps_df[bvps_date]
+        bvps_df[date] = bvps_df[bvps_date]
     bvps_df = bvps_df.T
     bvps_df = bvps_df[bvps_df.index > pd.Timestamp('2011-01-01')]
     bvps_df.sort_index(inplace=True)
     bvps_df.to_csv("bvps.csv",sep=',', encoding='utf-8')
+
 
 # equity change ---------------- 每季度股东权益变化 = 股东权益变化（万） + 拨备 - 不良 (亿)
 # 需要单元测试
@@ -55,19 +54,43 @@ def concat_equity_change():
         bank_df = pd.read_csv(bank_file_name,sep=',', encoding='utf-8')
         report_df = pd.read_csv(report_file_name,sep=',', encoding='utf-8')
         df = pd.concat([bank_df,report_df], axis=1)
-        df[['restore_ratio', 'bad_loan_ratio','total_loan','equity']] = df[['restore_ratio', 'bad_loan_ratio','total_loan','equity']].astype(float)
+
+        #净利润
+        df[['restore_ratio', 'bad_loan_ratio','total_loan','profit']] = df[['restore_ratio', 'bad_loan_ratio','total_loan','profit']].astype(float)
         equity_changes = []
         for index, row in df.iterrows():
             if index > len(df.index) - 5:
                 break
-
             last_row = df.iloc[index + 4]
+
+            profit = 0.0
+            if index%4 == 3:
+                profit = row['profit']
+            else:
+                last_year_profit = df.iloc[int(index/4) * 4 + 3]['profit']
+                profit = row['profit'] + last_year_profit - last_row['profit']
+       
             restore_should_increase = 0.0
             if last_row['restore_ratio'] < 2.5:
                 restore_year = (index + 1) * 0.25 #若为2015年第三季度，要在0.25年内达标。要在restore_year年内达标。
                 restore_should_increase = (2.5 - last_row['restore_ratio'])/restore_year 
-            equity_change = (row['equity'] - last_row['equity'])/10000 + 0.0075 * last_row['total_loan'] * (row['restore_ratio'] - (restore_should_increase + last_row['restore_ratio']) - row['bad_loan_ratio'] + last_row['bad_loan_ratio'])
-            equity_changes.append(equity_change)
+            equity_change = profit/10000 + 0.0075 * last_row['total_loan'] * (row['restore_ratio'] - (restore_should_increase + last_row['restore_ratio']) - row['bad_loan_ratio'] + last_row['bad_loan_ratio'])
+            equity_changes.append(equity_change) 
+
+        # 股东权益变化
+        # df[['restore_ratio', 'bad_loan_ratio','total_loan','equity']] = df[['restore_ratio', 'bad_loan_ratio','total_loan','equity']].astype(float)
+        # equity_changes = []
+        # for index, row in df.iterrows():
+        #     if index > len(df.index) - 5:
+        #         break
+
+        #     last_row = df.iloc[index + 4]
+        #     restore_should_increase = 0.0
+        #     if last_row['restore_ratio'] < 2.5:
+        #         restore_year = (index + 1) * 0.25 #若为2015年第三季度，要在0.25年内达标。要在restore_year年内达标。
+        #         restore_should_increase = (2.5 - last_row['restore_ratio'])/restore_year 
+        #     equity_change = (row['equity'] - last_row['equity'])/10000 + 0.0075 * last_row['total_loan'] * (row['restore_ratio'] - (restore_should_increase + last_row['restore_ratio']) - row['bad_loan_ratio'] + last_row['bad_loan_ratio'])
+        #     equity_changes.append(equity_change)
 
         equity_change_df = pd.DataFrame(equity_changes)
         names = list(equity_change_df.columns.values)
@@ -79,6 +102,8 @@ def concat_equity_change():
         equity_change_dfs.append(equity_change_df)
     df = pd.concat(equity_change_dfs, axis=1)
     return df
+
+#concat_equity_change()
 
 def calculate_equity_change():
 
@@ -104,9 +129,11 @@ def calculate_equity_change():
     bvps_df = bvps_df[bvps_df.index > pd.Timestamp('2011-01-01')]
     bvps_df.sort_index(inplace=True)
 
-    print bvps_df
+    #print bvps_df
     bvps_df.to_csv("equityChange.csv",sep=',', encoding='utf-8')
 
+
+#calculate_equity_change()
 # equity average ---------------- 股东权益平均值 = 初始股东权益 - 分红 + 再融资 (万)
 # 需要单元测试
 
@@ -116,28 +143,30 @@ def concat_equity():
     for bank in banks:
         file_name = "reportData/" + bank + ".csv"
         bank_df = pd.read_csv(file_name, index_col = 0,parse_dates = True)
-        bank_df = bank_df.drop(bank_df.columns[[0]],1)
+        bank_df = bank_df.drop(bank_df.columns[[0,1]],1)
 
         diverse_file_name = 'diverseData/' + bank + '.csv'
         diverse_df = pd.read_csv(diverse_file_name, index_col = 0,parse_dates = True)
 
         for diverse_date, row in diverse_df.iterrows():
 
-            selected_band_df = bank_df[bank_df.index < diverse_date]
+            selected_band_df = bank_df[bank_df.index < diverse_date] #获取分红之前的报表数据
+            selected_dates = []
+            if len(selected_band_df.index) >= 4:
+                selected_dates = list(selected_band_df.index)[:4]
+            else:
+                selected_dates = list(selected_band_df.index)
 
-            if len(selected_band_df.index) == 0:
-                continue
-            selected_date = selected_band_df.index[0]
-            date_interval = (diverse_date - selected_date) / pd.offsets.Day(1)
-            selected_index = list(bank_df.index).index(selected_date)
-            equity = bank_df.iloc[selected_index]['equity']
-            bank_df.iloc[selected_index]['equity'] = equity + (1 - date_interval/365) * float(row['diverse'])
-
+            for selected_date in selected_dates:
+                date_interval = (diverse_date - selected_date) / pd.offsets.Day(1)
+                selected_index = list(bank_df.index).index(selected_date)
+                equity = bank_df.iloc[selected_index]['equity']
+                bank_df.iloc[selected_index]['equity'] = equity + (1 - date_interval/365) * float(row['diverse'])
+                    
         bank_df = bank_df.rename(columns = {'equity':bank})
         bank_dfs.append(bank_df)
 
     bvps_df = pd.concat(bank_dfs, axis=1)
-    #print bvps_df
     return bvps_df
 
 def calculate_average_equity():
@@ -159,6 +188,7 @@ def calculate_average_equity():
             current_report_date_index += 1
             continue
         #equity_df 里插入非财报日的预测数据
+
         equity_df[date] = equity_df[equity_date]
 
     equity_df = equity_df.T
@@ -168,4 +198,47 @@ def calculate_average_equity():
     print equity_df
     equity_df.to_csv("equityAverage.csv",sep=',', encoding='utf-8')
 
-calculate_average_equity()
+
+# hold ---------------- 计算持仓 (万)
+# 需要单元测试
+
+def calculate_hold():
+    price_df = pd.read_csv('prices.csv',sep=',', encoding='utf-8',index_col = 1,parse_dates = True)
+    price_df = price_df.drop(price_df.columns[[0,1]],1)
+    equity_average_df = pd.read_csv('equityAverage.csv',sep=',', encoding='utf-8',index_col = 0,parse_dates = True)
+    equity_change_df = pd.read_csv('equityChange.csv',sep=',', encoding='utf-8',index_col = 0,parse_dates = True)
+    bvps_df = pd.read_csv('bvps.csv',sep=',', encoding='utf-8',index_col = 0,parse_dates = True)
+    dates = selected_index = list(price_df.index)
+    holds = []
+    for date, price_row in price_df.iterrows():
+        index = dates.index(date)
+        equity_average_row = equity_average_df.iloc[index]
+        equity_change_row = equity_change_df.iloc[index]
+        bvps_row = bvps_df.iloc[index]
+        df = pd.concat([price_row,equity_average_row,equity_change_row,bvps_row], axis=1)
+        names = list(df.columns.values)
+        df.columns = ['price','equity_average','equity_change','bvps']
+        df['equity_change'] = df['equity_change'] * 10000
+
+        ranks = []
+        roes = []
+        for bank,row in df.iterrows():
+            roe = row['equity_change']/row['equity_average']
+            rank = math.log(row['price'] * 2 / row['bvps'],1 + roe)
+            ranks.append(rank)
+            roes.append(roe)
+        df['roe'] = roes
+        df['rank'] = ranks
+        df = df.sort(['rank'])
+
+        if date == pd.Timestamp('2013-11-06'):
+            print df
+
+        holds.append(list(df.index)[0])
+
+    hold_df = pd.DataFrame(index = price_df.index)
+    hold_df['code'] = holds
+    hold_df.index.name = 'date'
+    hold_df.to_csv('result/hold.csv')
+
+calculate_hold()
