@@ -74,7 +74,7 @@ def concat_equity_change():
             if last_row['restore_ratio'] < 2.5:
                 restore_year = (index + 1) * 0.25 #若为2015年第三季度，要在0.25年内达标。要在restore_year年内达标。
                 restore_should_increase = (2.5 - last_row['restore_ratio'])/restore_year 
-            equity_change = profit/10000 + 0.0075 * last_row['total_loan'] * (row['restore_ratio'] - (restore_should_increase + last_row['restore_ratio']) - row['bad_loan_ratio'] + last_row['bad_loan_ratio'])
+            equity_change = profit/10000 + 0.0075 * row['total_loan'] * (row['restore_ratio'] - (restore_should_increase + last_row['restore_ratio']) - row['bad_loan_ratio'] + last_row['bad_loan_ratio'])
             equity_changes.append(equity_change) 
 
         # 股东权益变化
@@ -131,7 +131,6 @@ def calculate_equity_change():
 
     #print bvps_df
     bvps_df.to_csv("equityChange.csv",sep=',', encoding='utf-8')
-
 
 #calculate_equity_change()
 # equity average ---------------- 股东权益平均值 = 初始股东权益 - 分红 + 再融资 (万)
