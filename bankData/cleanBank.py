@@ -39,12 +39,12 @@ def clean_bank():
                 last_restore_cover_ratio = float(df.iloc[index + 1]['restore_cover_ratio'])
                 last_bad_loan = float(df.iloc[index + 1]['bad_loan'])
                 row['restore_cover_ratio'] = str(last_restore_cover_ratio * last_bad_loan / float(row['bad_loan']))
-            if row['bad_loan_ratio'] == '--':
-                row['bad_loan_ratio'] = str(float(row['bad_loan']) / float(row['total_loan']))
             if row['total_loan'] == '--':
                 row['total_loan'] = str(float(row['bad_loan']) / float(row['bad_loan_ratio']) * 100) 
             if row['bad_loan'] == '--':
                 row['bad_loan'] = str(float(row['total_loan']) * float(row['bad_loan_ratio']) / 100) 
+            row['bad_loan_ratio'] = str(float(row['bad_loan']) / float(row['total_loan']) * 100)
+
         df = df[df['date'] > "2009-01-01"]
         df = df.set_index(['date'])
 

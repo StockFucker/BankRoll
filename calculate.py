@@ -49,48 +49,58 @@ def calculate_everyday_bvps():
 def concat_equity_change():
     equity_change_dfs = []
     for bank in banks:
-        bank_file_name = "bankData/" + bank + ".csv"
-        report_file_name = "reportData/" + bank + ".csv"
-        bank_df = pd.read_csv(bank_file_name,sep=',', encoding='utf-8')
-        report_df = pd.read_csv(report_file_name,sep=',', encoding='utf-8')
-        df = pd.concat([bank_df,report_df], axis=1)
 
-        #净利润
+        bank_file_name = "bankData/" + bank + ".csv"
+        bank_df = pd.read_csv(bank_file_name,sep=',', encoding='utf-8')
+
+        report_file_name = "reportData/" + bank + ".csv"
+        report_df = pd.read_csv(report_file_name,sep=',', encoding='utf-8')
+        report_df = report_df.drop(report_df.columns[[0]],1)
+
+        diverse_file_name = 'diverseData/' + bank + '.csv'
+        diverse_df = pd.read_csv(diverse_file_name, sep=',', encoding='utf-8')
+        diverse_df['date'] = pd.to_datetime(diverse_df['date'])
+
+        df = pd.concat([bank_df,report_df], axis=1)
+        df['date'] = pd.to_datetime(df['date'])
         df[['restore_ratio', 'bad_loan_ratio','total_loan','profit']] = df[['restore_ratio', 'bad_loan_ratio','total_loan','profit']].astype(float)
+        
         equity_changes = []
+
         for index, row in df.iterrows():
             if index > len(df.index) - 5:
                 break
             last_row = df.iloc[index + 4]
 
             profit = 0.0
-            if index%4 == 3:
-                profit = row['profit']
-            else:
-                last_year_profit = df.iloc[int(index/4) * 4 + 3]['profit']
-                profit = row['profit'] + last_year_profit - last_row['profit']
-       
+            #净利润
+            # if index%4 == 3:
+            #     profit = row['profit']
+            # else:
+            #     last_year_profit = df.iloc[int(index/4) * 4 + 3]['profit']
+            #     profit = row['profit'] + last_year_profit - last_row['profit']
+            #股东权益变化
+            profit = row['equity'] - last_row['equity']
+            selected_diverse_df = diverse_df[diverse_df['date'] < row['date']]
+            selected_diverse_df = selected_diverse_df[diverse_df['date'] > last_row['date']]
+            diverses = list(selected_diverse_df['diverse'])
+            for diverse in diverses:
+                profit -= diverse
+
             restore_should_increase = 0.0
             if last_row['restore_ratio'] < 2.5:
                 restore_year = (index + 1) * 0.25 #若为2015年第三季度，要在0.25年内达标。要在restore_year年内达标。
                 restore_should_increase = (2.5 - last_row['restore_ratio'])/restore_year 
             equity_change = profit/10000 + 0.0075 * row['total_loan'] * (row['restore_ratio'] - (restore_should_increase + last_row['restore_ratio']) - row['bad_loan_ratio'] + last_row['bad_loan_ratio'])
             equity_changes.append(equity_change) 
-
-        # 股东权益变化
-        # df[['restore_ratio', 'bad_loan_ratio','total_loan','equity']] = df[['restore_ratio', 'bad_loan_ratio','total_loan','equity']].astype(float)
-        # equity_changes = []
-        # for index, row in df.iterrows():
-        #     if index > len(df.index) - 5:
-        #         break
-
-        #     last_row = df.iloc[index + 4]
-        #     restore_should_increase = 0.0
-        #     if last_row['restore_ratio'] < 2.5:
-        #         restore_year = (index + 1) * 0.25 #若为2015年第三季度，要在0.25年内达标。要在restore_year年内达标。
-        #         restore_should_increase = (2.5 - last_row['restore_ratio'])/restore_year 
-        #     equity_change = (row['equity'] - last_row['equity'])/10000 + 0.0075 * last_row['total_loan'] * (row['restore_ratio'] - (restore_should_increase + last_row['restore_ratio']) - row['bad_loan_ratio'] + last_row['bad_loan_ratio'])
-        #     equity_changes.append(equity_change)
+            if row['date'] == pd.Timestamp('2013-09-30') and bank == '600015':
+                print profit
+                print row['total_loan']
+                print row['restore_ratio']
+                print row['bad_loan_ratio']
+                print last_row['restore_ratio']
+                print last_row['bad_loan_ratio']
+                print equity_change
 
         equity_change_df = pd.DataFrame(equity_changes)
         names = list(equity_change_df.columns.values)
