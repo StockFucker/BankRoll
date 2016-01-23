@@ -66,7 +66,7 @@ def concat_equity_change():
         df[['restore_ratio', 'bad_loan_ratio','total_loan','profit']] = df[['restore_ratio', 'bad_loan_ratio','total_loan','profit']].astype(float)
         
         equity_changes = []
-
+       
         for index, row in df.iterrows():
             if index > len(df.index) - 5:
                 break
@@ -74,31 +74,35 @@ def concat_equity_change():
 
             profit = 0.0
             #净利润
-            # if index%4 == 3:
-            #     profit = row['profit']
-            # else:
-            #     last_year_profit = df.iloc[int(index/4) * 4 + 3]['profit']
-            #     profit = row['profit'] + last_year_profit - last_row['profit']
+            if index%4 == 3:
+                profit = row['profit']
+            else:
+                last_year_profit = df.iloc[int(index/4) * 4 + 3]['profit']
+                profit = row['profit'] + last_year_profit - last_row['profit']
             #股东权益变化
-            profit = row['equity'] - last_row['equity']
-            selected_diverse_df = diverse_df[diverse_df['date'] < row['date']]
-            selected_diverse_df = selected_diverse_df[diverse_df['date'] > last_row['date']]
-            diverses = list(selected_diverse_df['diverse'])
-            for diverse in diverses:
-                profit -= diverse
+            # profit = row['equity'] - last_row['equity']
+            # selected_diverse_df = diverse_df[diverse_df['date'] < row['date']]
+            # selected_diverse_df = selected_diverse_df[diverse_df['date'] > last_row['date']]
+            # diverses = list(selected_diverse_df['diverse'])
+            # for diverse in diverses:
+            #     profit -= diverse
 
+            isBigBank = (bank in ['601328','601988','601288','601398','601939'])
             restore_should_increase = 0.0
             if last_row['restore_ratio'] < 2.5:
-                restore_year = (index + 1) * 0.25 #若为2015年第三季度，要在0.25年内达标。要在restore_year年内达标。
+                restore_year = (index + 9) * 0.25 #若为2015年第三季度，要在0.25年内达标。要在restore_year年内达标。
+                if isBigBank and restore_year > 3:
+                    restore_year -= 3
                 restore_should_increase = (2.5 - last_row['restore_ratio'])/restore_year 
             equity_change = profit/10000 + 0.0075 * row['total_loan'] * (row['restore_ratio'] - (restore_should_increase + last_row['restore_ratio']) - row['bad_loan_ratio'] + last_row['bad_loan_ratio'])
             equity_changes.append(equity_change) 
-            if row['date'] == pd.Timestamp('2013-09-30') and bank == '600015':
-                print profit
+            if row['date'] == pd.Timestamp('2013-03-31') and bank == '601328':
+                print (index + 9) * 0.25
                 print row['total_loan']
-                print row['restore_ratio']
+                print row['restore_ratio'] 
                 print row['bad_loan_ratio']
                 print last_row['restore_ratio']
+                print last_row['restore_ratio'] + restore_should_increase
                 print last_row['bad_loan_ratio']
                 print equity_change
 
@@ -157,6 +161,9 @@ def concat_equity():
         diverse_file_name = 'diverseData/' + bank + '.csv'
         diverse_df = pd.read_csv(diverse_file_name, index_col = 0,parse_dates = True)
 
+        # if bank == '601166':
+        #     print bank_df
+
         for diverse_date, row in diverse_df.iterrows():
 
             selected_band_df = bank_df[bank_df.index < diverse_date] #获取分红之前的报表数据
@@ -171,7 +178,7 @@ def concat_equity():
                 selected_index = list(bank_df.index).index(selected_date)
                 equity = bank_df.iloc[selected_index]['equity']
                 bank_df.iloc[selected_index]['equity'] = equity + (1 - date_interval/365) * float(row['diverse'])
-                    
+
         bank_df = bank_df.rename(columns = {'equity':bank})
         bank_dfs.append(bank_df)
 
@@ -204,7 +211,7 @@ def calculate_average_equity():
     equity_df = equity_df[equity_df.index > pd.Timestamp('2011-01-01')]
     equity_df.sort_index(inplace=True)
 
-    print equity_df
+    #print equity_df
     equity_df.to_csv("equityAverage.csv",sep=',', encoding='utf-8')
 
 
@@ -250,4 +257,6 @@ def calculate_hold():
     hold_df.index.name = 'date'
     hold_df.to_csv('result/hold.csv')
 
+#calculate_average_equity()
+#calculate_equity_change()
 calculate_hold()
