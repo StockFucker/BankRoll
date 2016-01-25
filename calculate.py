@@ -96,8 +96,8 @@ def concat_equity_change():
                 restore_should_increase = (2.5 - last_row['restore_ratio'])/restore_year 
             equity_change = profit/10000 + 0.0075 * row['total_loan'] * (row['restore_ratio'] - (restore_should_increase + last_row['restore_ratio']) - row['bad_loan_ratio'] + last_row['bad_loan_ratio'])
             equity_changes.append(equity_change) 
-            if row['date'] == pd.Timestamp('2013-03-31') and bank == '601328':
-                print (index + 9) * 0.25
+            if row['date'] == pd.Timestamp('2013-03-31') and bank == '601818':
+                print profit
                 print row['total_loan']
                 print row['restore_ratio'] 
                 print row['bad_loan_ratio']
@@ -179,6 +179,12 @@ def concat_equity():
                 equity = bank_df.iloc[selected_index]['equity']
                 bank_df.iloc[selected_index]['equity'] = equity + (1 - date_interval/365) * float(row['diverse'])
 
+                if bank == '601328':
+                    print selected_date
+                    print equity
+                    print row['diverse']
+                    print bank_df.iloc[selected_index]['equity']
+
         bank_df = bank_df.rename(columns = {'equity':bank})
         bank_dfs.append(bank_df)
 
@@ -240,6 +246,19 @@ def calculate_hold():
         roes = []
         for bank,row in df.iterrows():
             roe = row['equity_change']/row['equity_average']
+            # if date == pd.Timestamp('2013-12-05'):
+            #     if bank == '601166':
+            #         row['bvps'] = 10.6036
+            #         #roe = 0.25852
+            #         #row['price'] = 10.870
+            #     elif bank == '601328':
+            #         row['bvps'] = 5.6486
+            #         #roe = 0.13974
+            #         #row['price'] = 4.240
+            #     elif bank == '601818':
+            #         row['bvps'] = 3.3730
+            #         #roe = 0.19073
+            #         #row['price'] = 2.880
             rank = math.log(row['price'] * 2 / row['bvps'],1 + roe)
             ranks.append(rank)
             roes.append(roe)
@@ -247,7 +266,7 @@ def calculate_hold():
         df['rank'] = ranks
         df = df.sort(['rank'])
 
-        if date == pd.Timestamp('2013-11-06'):
+        if date == pd.Timestamp('2013-06-03'):
             print df
 
         holds.append(list(df.index)[0])

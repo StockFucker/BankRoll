@@ -43,7 +43,7 @@ def clean_bank():
                 row['total_loan'] = str(float(row['bad_loan']) / float(row['bad_loan_ratio']) * 100) 
             if row['bad_loan'] == '--':
                 row['bad_loan'] = str(float(row['total_loan']) * float(row['bad_loan_ratio']) / 100) 
-            row['bad_loan_ratio'] = str(float(row['bad_loan']) / float(row['total_loan']) * 100)
+            row['bad_loan_ratio'] = str(round(float(row['bad_loan']) / float(row['total_loan']) * 100,4))
 
         df = df[df['date'] > "2009-01-01"]
         df = df.set_index(['date'])
@@ -51,6 +51,12 @@ def clean_bank():
         df[['restore_cover_ratio', 'bad_loan','total_loan']] = df[['restore_cover_ratio', 'bad_loan','total_loan']].astype(float)
         df['restore_ratio'] = df['restore_cover_ratio'] * df['bad_loan'] / df['total_loan']
 
+        restore_ratios = []
+        for index, row in df.iterrows():
+            restore_ratio = round(row['restore_ratio'],4)
+            restore_ratios.append(restore_ratio)
+
+        df['restore_ratio'] = restore_ratios
         print df
 
         df = df.drop(df.columns[[0,2]],1)
