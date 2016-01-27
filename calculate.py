@@ -96,7 +96,7 @@ def concat_equity_change():
                 restore_should_increase = (2.5 - last_row['restore_ratio'])/restore_year 
             equity_change = profit/10000 + 0.0075 * row['total_loan'] * (row['restore_ratio'] - (restore_should_increase + last_row['restore_ratio']) - row['bad_loan_ratio'] + last_row['bad_loan_ratio'])
             equity_changes.append(equity_change) 
-            if row['date'] == pd.Timestamp('2013-03-31') and bank == '601818':
+            if row['date'] == pd.Timestamp('2013-03-31') and bank == '601169':
                 print profit
                 print row['total_loan']
                 print row['restore_ratio'] 
@@ -266,7 +266,7 @@ def calculate_hold():
         df['rank'] = ranks
         df = df.sort(['rank'])
 
-        if date == pd.Timestamp('2013-06-03'):
+        if date == pd.Timestamp('2013-11-06'):
             print df
 
         holds.append(list(df.index)[0])
@@ -277,5 +277,5 @@ def calculate_hold():
     hold_df.to_csv('result/hold.csv')
 
 #calculate_average_equity()
-#calculate_equity_change()
-calculate_hold()
+calculate_equity_change()
+#calculate_hold()
