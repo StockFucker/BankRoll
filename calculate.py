@@ -18,7 +18,9 @@ def concat_bvps():
     bvps_df = pd.concat(bank_dfs, axis=1)
     return bvps_df
 
-def calculate_everyday_bvps():
+def calculate_season_bvps():
+    roe_df = pd.read_csv('roe.csv')
+    roe_df['date'] = pd.to_datetime(roe_df['date'])
 
     df = pd.read_csv('prices.csv',sep=',', encoding='utf-8')
     df['date'] = pd.to_datetime(df['date'])
@@ -28,19 +30,154 @@ def calculate_everyday_bvps():
     bvps_dates.append(pd.Timestamp('2016-01-01'))
     bvps_df = bvps_df.T
     current_bvps_date_index = 7
+
+    next_bvps_df = pd.DataFrame(index=bvps_df.index)
+    third_bvps_df = pd.DataFrame(index=bvps_df.index)
+
     for index, row in df.iterrows():
         date = row['date']
-        bvps_date = bvps_dates[current_bvps_date_index]
         next_bvps_date = bvps_dates[current_bvps_date_index + 1]
         if date >= next_bvps_date: #如果相等，则采用原值
             current_bvps_date_index += 1
-            continue
-        #在bvps_df 里插入非财报日的预测数据
-        bvps_df[date] = bvps_df[bvps_date]
+
+        #获取前三季度的净资产，用roe计算出下一季度的净资产
+
+        last_year_bvps_date = bvps_dates[current_bvps_date_index - 3]
+        third_season_bvps_date = bvps_dates[current_bvps_date_index]
+        roe = roe_df[roe_df['date'] == date]
+        last_year_bvps = bvps_df[last_year_bvps_date]
+        third_season_bvps = bvps_df[third_season_bvps_date]
+
+        roe = roe.drop(roe.columns[[0]],1)
+        roe = roe.T
+        names = list(roe.columns.values)
+        roe = roe.rename(columns = {names[0]:"roe"})
+
+        roe['last_bvps'] = last_year_bvps #三季度前的bvps
+        roe['third_bvps'] = third_season_bvps #上季度的bvps
+        roe['next_bvps'] = roe['last_bvps'] * (roe['roe'] + 1) #下季度的bvps
+        next_bvps_df[date] = roe['next_bvps']
+        third_bvps_df[date] = roe['third_bvps']
+
+    next_bvps_df = next_bvps_df.T
+    third_bvps_df = third_bvps_df.T
+    next_bvps_df.index.name = 'date'
+    third_bvps_df.index.name = 'date'
+    next_bvps_df.to_csv('next_bvps.csv')
+    third_bvps_df.to_csv('third_bvps.csv')
+
+def fix_three_season_bvps():
+
+    dfs = []
+    for bank in banks:
+        file_name = "reportData/" + bank + ".csv"
+        df = pd.read_csv(file_name)
+        df['date'] = pd.to_datetime(df['date'])
+        df = df.drop(df.columns[[2]],1)
+
+        print df
+        #分红
+        # diverse_name = "diverseData/originData/" + bank + "_0.csv"
+        # diverse_df = pd.read_csv(diverse_name)
+        # to_drop = range(0,len(diverse_df.axes[1]))
+        # to_drop.remove(2)
+        # to_drop.remove(3)
+        # to_drop.remove(4)
+        # to_drop.remove(6)
+        # diverse_df = diverse_df.drop(diverse_df.columns[to_drop],1)
+        # diverse_df.columns = ["a","b","c","date"]
+        # diverse_df['date'] = pd.to_datetime(diverse_df['date'])
+        # diverse_df = diverse_df[diverse_df['date'] > pd.Timestamp('2010-01-01')]
+        # for index, row in diverse_df.iterrows():
+        #     date = row['date']
+        #     selected_df = df[df['date'] > date]
+        #     selected_df.sort(['date'],inplace = True)
+        #     selected_indexs = selected_df.index
+        #     if len(selected_indexs) > 3:
+        #         selected_indexs = selected_indexs[:3]
+        #     a = 0.0 if row['a'] == '--' else float(row['a'])/10
+        #     b = 0.0 if row['b'] == '--' else float(row['b'])/10
+        #     c = 0.0 if row['c'] == '--' else float(row['c'])/10
+        #     for selected_index in selected_indexs:
+        #         bvps = df.iloc[selected_index]['bvps']
+        #         df.ix[selected_index,'bvps'] = (bvps - c)/(1 + a + b)
+
+        #融资
+        raise_name = "diverseData/originData/" + bank + "_2.csv"
+        raise_df = pd.read_csv(raise_name)
+        to_drop = range(0,len(raise_df.axes[1]))
+        to_drop.remove(2)
+        to_drop.remove(3)
+        to_drop.remove(4)
+        to_drop.remove(6)
+        raise_df = raise_df.drop(raise_df.columns[to_drop],1)
+        raise_df.columns = ["amount","total","price","date"]
+        raise_df['date'] = pd.to_datetime(raise_df['date'])
+        raise_df = raise_df[raise_df['date'] > pd.Timestamp('2010-01-01')]
+        raise_df = raise_df.replace({',': ''}, regex=True)
+        for index, row in raise_df.iterrows():
+            date = row['date']
+            selected_df = df[df['date'] > date]
+            selected_df.sort(['date'],inplace = True)
+            selected_indexs = selected_df.index
+            if len(selected_indexs) > 3:
+                selected_indexs = selected_indexs[:3]
+            amount = float(row['amount'])
+            total = float(row['total'])
+            for selected_index in selected_indexs:
+                bvps = df.iloc[selected_index][bank]
+                equity = df.iloc[selected_index][bank]
+                df.ix[selected_index,'bvps'] = (bvps - c)/(1 + a + b)
+        df = df.rename(columns = {'bpvs':bank})
+        df = df.drop('equity',1)
+        dfs.append(df)
+
+    df = pd.concat(dfs, axis=1)
+
+    
+
+fix_three_season_bvps()
+
+def calculate_everyday_bvps():
+
+    roe_df = pd.read_csv('roe.csv')
+    roe_df['date'] = pd.to_datetime(roe_df['date'])
+
+    df = pd.read_csv('prices.csv',sep=',', encoding='utf-8')
+    df['date'] = pd.to_datetime(df['date'])
+
+    bvps_df = concat_bvps()
+    bvps_dates = list(bvps_df.index)
+    bvps_dates.append(pd.Timestamp('2016-01-01'))
+    bvps_df = bvps_df.T
+    current_bvps_date_index = 7
+
+    for index, row in df.iterrows():
+        date = row['date']
+        next_bvps_date = bvps_dates[current_bvps_date_index + 1]
+        if date >= next_bvps_date: #如果相等，则采用原值
+            current_bvps_date_index += 1
+        continue
+        #获取前三季度的净资产，用roe计算出下一季度的净资产
+
+        last_year_bvps_date = bvps_dates[current_bvps_date_index - 3]
+        third_season_bvps_date = bvps_dates[current_bvps_date_index]
+        roe = roe_df[roe_df['date'] == date]
+        last_year_bvps = bvps_df[last_year_bvps_date]
+        third_season_bvps = bvps_df[third_season_bvps_date]
+
+        roe = roe.drop(roe.columns[[0]],1)
+        roe = roe.T
+        roe['last_bvps'] = last_year_bvps #三季度前的bvps
+        names = list(roe.columns.values)
+        roe = roe.rename(columns = {names[0]:"roe"})
+        roe['third_bvps'] = third_season_bvps #上季度的bvps
+        roe['next_bvps'] = roe['last_bvps'] * (roe['roe'] + 1) #下季度的bvps
+
     bvps_df = bvps_df.T
     bvps_df = bvps_df[bvps_df.index > pd.Timestamp('2011-01-01')]
     bvps_df.sort_index(inplace=True)
-    bvps_df.to_csv("bvps.csv",sep=',', encoding='utf-8')
+    #bvps_df.to_csv("bvps.csv",sep=',', encoding='utf-8')
 
 
 # equity change ---------------- 每季度股东权益变化 = 股东权益变化（万） + 拨备 - 不良 (亿)
@@ -146,7 +283,6 @@ def calculate_equity_change():
     #print bvps_df
     bvps_df.to_csv("equityChange.csv",sep=',', encoding='utf-8')
 
-#calculate_equity_change()
 # equity average ---------------- 股东权益平均值 = 初始股东权益 - 分红 + 再融资 (万)
 # 需要单元测试
 
@@ -206,10 +342,8 @@ def calculate_average_equity():
         date = row['date']
         equity_date = equity_dates[current_report_date_index]
         next_equity_date = equity_dates[current_report_date_index + 5]
-        if date >= next_equity_date: #如果相等，则采用原值
+        if date >= next_equity_date: 
             current_report_date_index += 1
-            continue
-        #equity_df 里插入非财报日的预测数据
 
         equity_df[date] = equity_df[equity_date]
 
@@ -217,10 +351,18 @@ def calculate_average_equity():
     equity_df = equity_df[equity_df.index > pd.Timestamp('2011-01-01')]
     equity_df.sort_index(inplace=True)
 
-    #print equity_df
     equity_df.to_csv("equityAverage.csv",sep=',', encoding='utf-8')
 
+#calculate_average_equity()
+# roe ---------------- 计算roe (万)
 
+def calculate_roe():
+    equity_average_df = pd.read_csv('equityAverage.csv',sep=',', encoding='utf-8',index_col = 0,parse_dates = True)
+    equity_change_df = pd.read_csv('equityChange.csv',sep=',', encoding='utf-8',index_col = 0,parse_dates = True)
+    df = equity_change_df/equity_average_df*10000
+    df.to_csv('roe.csv')
+
+#calculate_roe()
 # hold ---------------- 计算持仓 (万)
 # 需要单元测试
 
@@ -246,19 +388,6 @@ def calculate_hold():
         roes = []
         for bank,row in df.iterrows():
             roe = row['equity_change']/row['equity_average']
-            # if date == pd.Timestamp('2013-12-05'):
-            #     if bank == '601166':
-            #         row['bvps'] = 10.6036
-            #         #roe = 0.25852
-            #         #row['price'] = 10.870
-            #     elif bank == '601328':
-            #         row['bvps'] = 5.6486
-            #         #roe = 0.13974
-            #         #row['price'] = 4.240
-            #     elif bank == '601818':
-            #         row['bvps'] = 3.3730
-            #         #roe = 0.19073
-            #         #row['price'] = 2.880
             rank = math.log(row['price'] * 2 / row['bvps'],1 + roe)
             ranks.append(rank)
             roes.append(roe)
@@ -266,7 +395,7 @@ def calculate_hold():
         df['rank'] = ranks
         df = df.sort(['rank'])
 
-        if date == pd.Timestamp('2013-11-06'):
+        if date == pd.Timestamp('2013-09-05'):
             print df
 
         holds.append(list(df.index)[0])
@@ -277,5 +406,6 @@ def calculate_hold():
     hold_df.to_csv('result/hold.csv')
 
 #calculate_average_equity()
-calculate_equity_change()
+#calculate_equity_change()
+#calculate_roe()
 #calculate_hold()
