@@ -109,25 +109,31 @@ def fix_three_season_bvps():
         diverse_df = pd.concat([diverse_df,raise_df], axis=0)
         diverse_df.sort(inplace = True,ascending = False)
 
-        for index, row in diverse_df.iterrows():
-            selected_df = df[df.index > index]
+        for date, row in diverse_df.iterrows():
+            selected_df = df[df.index > date]
             selected_df.sort(inplace = True)
             selected_indexs = selected_df.index
             if len(selected_indexs) > 3:
                 selected_indexs = selected_indexs[:3]
+
             a = 0.0 if row['a'] == '--' else float(row['a'])
             b = 0.0 if row['b'] == '--' else float(row['b'])
             c = 0.0 if row['c'] == '--' else float(row['c'])
             for selected_index in selected_indexs:
-                index = list(selected_df.index).index(selected_index)
+                index = list(df.index).index(selected_index)
                 bvps = df.iloc[index]['bpvs']
                 equity = df.iloc[index]['equity']
                 if b < 100:
+                    if bank == "600000":
+                        print selected_index
+                        print bvps * (1 + a/10 + b/10) + c/10 
+                        print "========="
                     df.ix[index,'bpvs'] = bvps * (1 + a/10 + b/10) + c/10  
                     df.ix[index,'equity'] = equity + c/10 * equity / bvps  #单位为万
                 else:
                     df.ix[index,'bpvs'] = (equity - b)/(equity/bvps - a) #分子分母各除10000
                     df.ix[index,'equity'] = equity - b  #单位为万
+
 
         df = df.rename(columns = {'bpvs':bank})
         df = df.drop('equity',1)
@@ -136,8 +142,7 @@ def fix_three_season_bvps():
     df = pd.concat(dfs, axis=1)
     df.to_csv('third_bvps_fix.csv')
 
-
-#fix_three_season_bvps()
+fix_three_season_bvps()
 
 def calculate_everyday_bvps():
 
@@ -178,7 +183,7 @@ def calculate_everyday_bvps():
     bvps_df.sort_index(inplace=True)
     print bvps_df
 
-calculate_everyday_bvps()
+#calculate_everyday_bvps()
 
 # equity change ---------------- 每季度股东权益变化 = 股东权益变化（万） + 拨备 - 不良 (亿)
 # 需要单元测试
